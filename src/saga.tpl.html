@@ -1,0 +1,417 @@
+<title>The Age of the Falling Star</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Pixelify+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: a parchment book lying on a dark desk. Cover with the map, then one chapter per leaf, each opened by a vignette cut from the Eldermere map. Single look by choice. */
+:root {
+  color-scheme: dark;
+  --desk: #0C0D0E;
+  --desk-2: #151718;
+  --paper: #E6DCC4;
+  --paper-edge: #CDBF9F;
+  --ink: #2B2219;
+  --ink-soft: #6A5A46;
+  --rubric: #7A2E26;
+  --gold: #C9AE7C;
+  --frost: #678F9D;
+  --f-book: "IM Fell English", "Iowan Old Style", Georgia, serif;
+  --f-caps: "IM Fell English SC", "Iowan Old Style", Georgia, serif;
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --map: url("{{BG}}");
+}
+* { box-sizing: border-box; }
+body { background: var(--desk); color: var(--paper); font: 400 1.0625rem/1.6 var(--f-book); }
+body::after { content: ""; position: fixed; inset: 0; z-index: -1; background: var(--map) center / cover; opacity: .09; filter: grayscale(.5) blur(2px); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 400; }
+p { margin: 0; }
+.shell { max-width: 820px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 96px; display: grid; gap: 40px; }
+.back { font: 400 .85rem/1 var(--f-pixel); letter-spacing: .12em; text-transform: uppercase; color: var(--gold); text-decoration: none; justify-self: start; }
+.back:hover { text-decoration: underline; }
+
+/* Cover */
+.cover { position: relative; overflow: hidden; border: 1px solid #2A2E30; box-shadow: 0 30px 60px rgba(0,0,0,.6); }
+.cover-art { aspect-ratio: 3 / 2; max-width: 100%; background: var(--map) center / cover; }
+.cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(12,13,14,.97) 8%, rgba(12,13,14,.55) 45%, rgba(12,13,14,0) 75%); }
+.cover-text { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: clamp(20px, 5vw, 44px); display: grid; gap: 10px; }
+.kicker { font: 400 .8rem/1 var(--f-pixel); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.cover h1 { font: 400 clamp(2.2rem, 7vw, 4.2rem)/1 var(--f-caps); color: #F1E9D6; text-shadow: 0 2px 12px rgba(0,0,0,.7); }
+.cover .sub { font: italic 400 clamp(1rem, 2.4vw, 1.25rem)/1.4 var(--f-book); color: #CFC6B2; }
+
+/* Contents */
+.contents { display: grid; gap: 14px; }
+.contents h2 { font: 400 .85rem/1 var(--f-pixel); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.contents ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+.contents li { border-bottom: 1px solid #25282A; }
+.contents a { display: grid; grid-template-columns: 3.2em minmax(0, 1fr); gap: 10px; padding: 9px 2px; color: #D9D2C2; text-decoration: none; font-size: 1.05rem; }
+.contents a span { font: 400 .8rem/1.9 var(--f-pixel); color: var(--ink-soft); color: #8A7D69; letter-spacing: .06em; }
+.contents a:hover, .contents a[aria-current="true"] { color: var(--gold); }
+
+/* Leaf */
+.book { display: grid; gap: 18px; }
+.leaf { position: relative; background: var(--paper); color: var(--ink); padding-block: clamp(32px, 6vw, 64px); padding-inline: clamp(22px, 7vw, 76px);
+  box-shadow: 0 1px 0 var(--paper-edge), 0 3px 0 #BFB091, 0 5px 0 #AE9F80, 0 30px 60px rgba(0,0,0,.65);
+  background-image: radial-gradient(ellipse at 50% 40%, rgba(255,250,235,.55), rgba(255,250,235,0) 70%), radial-gradient(ellipse at 100% 100%, rgba(120,90,50,.18), rgba(120,90,50,0) 55%), radial-gradient(ellipse at 0% 0%, rgba(120,90,50,.14), rgba(120,90,50,0) 45%); }
+.chapter { display: grid; gap: 22px; justify-items: center; }
+.chapter + .chapter { margin-top: 64px; padding-top: 64px; border-top: 1px solid var(--paper-edge); }
+.js .chapter + .chapter { margin-top: 0; padding-top: 0; border-top: 0; }
+.vignette { width: 152px; height: 152px; max-width: 100%; border-radius: 50%; background-image: var(--map); background-repeat: no-repeat; background-size: 500% auto;
+  background-position: calc((var(--x) * 1.25 - .125) * 100%) calc((var(--y) * 1.4286 - .2143) * 100%);
+  border: 3px double var(--ink-soft); box-shadow: 0 0 0 6px var(--paper), 0 0 0 7px var(--paper-edge); filter: sepia(.25) saturate(.9); }
+.num { font: 400 .8rem/1 var(--f-pixel); letter-spacing: .24em; text-transform: uppercase; color: var(--rubric); }
+.chapter h2 { font: 400 clamp(1.8rem, 5vw, 2.6rem)/1.1 var(--f-caps); text-align: center; color: var(--ink); }
+.chapter h2 small { display: block; font: italic 400 .5em/1.4 var(--f-book); color: var(--ink-soft); margin-top: 6px; }
+.rule { width: 120px; height: 9px; background:
+  linear-gradient(var(--ink-soft), var(--ink-soft)) left center / 46px 1px no-repeat,
+  linear-gradient(var(--ink-soft), var(--ink-soft)) right center / 46px 1px no-repeat;
+  position: relative; }
+.rule::after { content: ""; position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; background: var(--rubric); transform: translate(-50%, -50%) rotate(45deg); }
+.prose { justify-self: stretch; max-width: 62ch; margin: 0 auto; display: grid; gap: 1.05em; font-size: clamp(1.08rem, 2.2vw, 1.22rem); line-height: 1.65; hyphens: auto; }
+.prose > p:first-child::first-letter { float: left; font: 400 4.1em/.78 var(--f-caps); color: var(--rubric); margin: .06em .1em 0 0; }
+.prose .beat { text-align: center; font-style: italic; color: var(--ink-soft); }
+.prose .stark { font-family: var(--f-caps); font-size: 1.15em; text-align: center; color: var(--ink); letter-spacing: .02em; }
+.said { margin: .4em 0; padding: 0 0 0 22px; border-left: 2px solid var(--rubric); font: italic 400 1.22em/1.45 var(--f-book); color: var(--rubric); }
+.said cite { display: block; margin-top: 6px; font: normal 400 .62em/1.3 var(--f-pixel); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.fin { font: 400 .8rem/1 var(--f-pixel); letter-spacing: .3em; text-transform: uppercase; color: var(--rubric); text-align: center; }
+
+/* Pager */
+.pager { display: none; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; }
+.js .pager { display: grid; }
+.pager button { font: 400 .85rem/1.2 var(--f-pixel); letter-spacing: .08em; background: var(--desk-2); color: #E2E4E5; border: 1px solid #34393C; padding: 12px 14px; cursor: pointer; text-align: left; box-shadow: 3px 3px 0 rgba(0,0,0,.5); min-width: 0; }
+.pager button.next { text-align: right; }
+.pager button small { display: block; color: var(--gold); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 3px; }
+.pager button:hover:not(:disabled) { border-color: var(--gold); }
+.pager button:disabled { opacity: .35; cursor: default; }
+.pager .count { font: 400 .85rem/1 var(--f-pixel); color: #8E9497; letter-spacing: .1em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.leaf.turn { animation: turn .45s ease-out; }
+@keyframes turn { from { opacity: .35; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .leaf.turn { animation: none; } }
+@media (max-width: 600px) {
+  .contents ol { grid-template-columns: minmax(0, 1fr); }
+  .vignette { width: 116px; height: 116px; }
+  .pager button .t { display: none; }
+}
+</style>
+
+<div class="shell">
+  <a class="back" href="{{SITE}}">← Eldermere · sopelcraft.gg</a>
+
+  <header class="cover">
+    <div class="cover-art" role="img" aria-label="Painted map of the continent of Eldermere"></div>
+    <div class="cover-text">
+      <p class="kicker">Eldermere · The First Saga</p>
+      <h1>The Age of the Falling Star</h1>
+      <p class="sub">How the seals broke, how Vaelthar rose, and how two heroes from opposite ends of the continent brought him down.</p>
+    </div>
+  </header>
+
+  <nav class="contents" aria-label="Chapters">
+    <h2>Contents</h2>
+    <ol id="toc"></ol>
+  </nav>
+
+  <div class="book" id="book">
+  <div class="leaf" id="leaf">
+
+    <article class="chapter" id="prologue" data-label="Prologue" style="--x:.5;--y:.5">
+      <div class="vignette" style="background-size:220% auto"></div>
+      <p class="num">Prologue</p>
+      <h2>The Firstborn<small>Before the kingdoms</small></h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>Long before the kingdoms of Eldermere existed, the world was ruled by an ancient civilization known as the Firstborn. They discovered a force beyond ordinary magic: a primordial power buried beneath the world itself.</p>
+        <p class="stark">They called it the Heart of Creation.</p>
+        <p>It could create life, reshape the land, bend magic, and destroy entire civilizations. But one of the Firstborn became obsessed with it. His name was Vaelthar.</p>
+        <p>Vaelthar did not want to use the Heart. He wanted to become its master. He believed that creation itself was flawed and that peace was nothing more than weakness. In his eyes, the world needed a single will to command it.</p>
+        <p>His followers began conquering the ancient kingdoms. The Firstborn fought back, and the war lasted for centuries. In the final battle, Vaelthar was defeated. But he could not be killed.</p>
+        <p>Instead, the surviving Firstborn imprisoned him beneath the continent. They built enormous seals across Eldermere and erased his name from history.</p>
+        <p>The world slowly forgot him. The Firstborn disappeared. Kingdoms rose over their ruins, and eventually Eldermere became the land known to the present age.</p>
+        <p>But Vaelthar remained beneath the earth.</p>
+        <p class="beat">Waiting.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch1" data-label="The Falling Star" style="--x:.5;--y:.1">
+      <div class="vignette"></div>
+      <p class="num">Chapter I</p>
+      <h2>The Falling Star</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>Thousands of years later, a strange object falls from the sky. The people of Eldermere call it the Falling Star. They believe it to be a natural phenomenon.</p>
+        <p class="stark">It is not.</p>
+        <p>The Star is a fragment of the ancient Heart of Creation, and its arrival begins weakening the seals that imprison Vaelthar.</p>
+        <p>The effects spread across the continent. The magic of Frostpeak becomes unstable. The forests of Silverwood begin changing. Ancient ruins awaken. Creatures long thought extinct return. And beneath Blackspire, something begins to breathe again.</p>
+        <p>At first, nobody understands what is happening. The mages believe it is a magical disturbance. The warriors believe it is an invasion. The kings believe it is a political crisis.</p>
+        <p>They are all wrong.</p>
+        <p class="stark">The old enemy has returned.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch2" data-label="The Two Heroes" style="--x:.4;--y:.28">
+      <div class="vignette"></div>
+      <p class="num">Chapter II</p>
+      <h2>The Two Heroes<small>Ravenford and Wintermere</small></h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The story begins with two completely different people. One comes from Ravenford, in the forests of Silverwood. The other comes from Wintermere, in the mountains of Frostpeak.</p>
+        <p>The Warrior believes strength exists to protect others. The Mage believes knowledge exists to understand the unknown.</p>
+        <p>Their cultures have developed completely different philosophies. The Warriors distrust excessive magic. The Mages consider the Warriors primitive and impulsive. For generations, the two societies have remained distant.</p>
+        <p>The Falling Star begins changing that. Both heroes discover evidence of the same ancient symbol. Both discover references to a forgotten civilization. And eventually, both learn the same terrifying truth.</p>
+        <p>The disturbances are not random.</p>
+        <p class="stark">Someone is deliberately breaking the ancient seals.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch3" data-label="The Enemies of Silverwood" style="--x:.27;--y:.3">
+      <div class="vignette"></div>
+      <p class="num">Chapter III</p>
+      <h2>The Enemies of Silverwood<small>Darius Veyne, the Black Wolf</small></h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The first major enemy the Warrior encounters is Darius Veyne, known as the Black Wolf.</p>
+        <p>Darius was once one of Silverwood's greatest warriors. He was respected, disciplined, and loyal. But years earlier, his entire company disappeared while exploring an ancient ruin beneath the forest. Darius returned alone, and something had changed inside him.</p>
+        <p>He began to believe that the Warriors of Silverwood had become weak. He abandoned the old traditions and created his own faction: the Iron Wolves.</p>
+        <p>Unlike ordinary enemies, the Iron Wolves are not mindless monsters. They are warriors and soldiers, people who genuinely believe they are saving Silverwood. Darius believes civilization has grown weak because people fear death, pain, and sacrifice. His philosophy is simple.</p>
+        <blockquote class="said">“Peace creates weakness. War creates strength.”<cite>Darius Veyne</cite></blockquote>
+        <p>At first, Darius appears to be the Warrior's main enemy. But eventually the truth is revealed. Darius has been manipulated by Vaelthar. The ancient evil has been whispering to him through the ruins beneath Silverwood.</p>
+        <p>Darius believes he is using the power beneath the forest.</p>
+        <p class="stark">In reality, the power is using him.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch4" data-label="The Enemies of Frostpeak" style="--x:.51;--y:.16">
+      <div class="vignette"></div>
+      <p class="num">Chapter IV</p>
+      <h2>The Enemies of Frostpeak<small>Seraphine Voss, the Frost Witch</small></h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The Mage's greatest enemy is Seraphine Voss, known as the Frost Witch.</p>
+        <p>Seraphine was once one of Frostpeak's most brilliant mages. She believed magic should never be controlled by governments, councils, or traditions. She wanted to discover the original source of magic itself.</p>
+        <p>When the Falling Star appeared, Seraphine became obsessed with it. She discovered that the Star contained fragments of the Heart of Creation. Unlike the other mages, she did not fear it. She embraced it.</p>
+        <p>Seraphine gathers forbidden mages around herself and establishes a secret order known as the Veiled Circle. Her followers believe the ancient laws of magic are lies created by fearful people. They want to break the seals beneath Frostpeak.</p>
+        <p>Seraphine's philosophy is different from Darius's. Darius believes the world must become stronger. Seraphine believes the world must become greater. She wants magic to evolve beyond mortal limits. She believes she can become something more than human.</p>
+        <p>And eventually, she succeeds.</p>
+        <p class="beat">Partially.</p>
+        <p>The result is horrifying. Seraphine becomes something between a mortal mage and an ancient magical entity. But the transformation has a cost. She slowly loses the person she once was.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch5" data-label="The Two Rivals" style="--x:.62;--y:.36">
+      <div class="vignette"></div>
+      <p class="num">Chapter V</p>
+      <h2>The Two Rivals</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>Eventually, Darius and Seraphine become aware of each other, and they hate one another. Darius believes magic has corrupted Seraphine. Seraphine believes Darius is nothing more than an ignorant soldier.</p>
+        <p>But both are unknowingly serving the same master.</p>
+        <p>Their conflict becomes one of the central tensions of the story. The Warrior is forced to confront Darius. The Mage is forced to confront Seraphine. But neither of them is truly the final enemy.</p>
+        <p class="stark">They are pieces on a much larger board.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch6" data-label="The Truth of Kingsreach" style="--x:.47;--y:.44">
+      <div class="vignette"></div>
+      <p class="num">Chapter VI</p>
+      <h2>The Truth of Kingsreach</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>Eventually, both heroes reach Kingsreach. For the first time, the Warrior and the Mage meet. They discover that the ancient symbol they have been following belongs to the Firstborn.</p>
+        <p>Beneath the capital lies an enormous underground chamber. Inside is the oldest surviving record of Eldermere, and it tells the truth about Vaelthar. The ancient enemy was never destroyed. He was imprisoned, and the Falling Star has weakened the prison.</p>
+        <p>But there is something worse. The seals cannot simply be repaired. Someone must enter the ancient prison and confront Vaelthar directly.</p>
+        <p>The heroes realize that the events across Eldermere are connected. Darius is breaking the seals in Silverwood. Seraphine is breaking the seals beneath Frostpeak. Other factions across the continent are unknowingly doing the same.</p>
+        <p>The continent is slowly becoming a giant ritual.</p>
+        <p class="stark">And Blackspire is its center.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch7" data-label="The Rise of Vaelthar" style="--x:.75;--y:.26">
+      <div class="vignette"></div>
+      <p class="num">Chapter VII</p>
+      <h2>The Rise of Vaelthar</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>As the seals begin to fail, Eldermere descends into chaos. The creatures of the ancient world return. Dead kingdoms awaken. Cities fall. Trade routes disappear. The oceans become dangerous. The forests become corrupted. The mountains crack open.</p>
+        <p>The people of Eldermere finally understand that they are not fighting an invasion. They are witnessing the return of something that existed before their civilization. Something that considers humanity nothing more than an accident.</p>
+        <p>Vaelthar finally speaks to the world. He does not scream. He does not threaten. He simply announces his return.</p>
+        <blockquote class="said">“You built your kingdoms upon my prison.”<cite>Vaelthar</cite></blockquote>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch8" data-label="Vaelthar, the First Darkness" style="--x:.755;--y:.23">
+      <div class="vignette" style="background-size:900% auto;background-position:calc((var(--x) * 1.125 - .0625) * 100%) calc((var(--y) * 1.2 - .1) * 100%)"></div>
+      <p class="num">Chapter VIII</p>
+      <h2>Vaelthar<small>The First Darkness</small></h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>Vaelthar does not look like a typical demon. He looks ancient. Almost regal.</p>
+        <p>He wears enormous black armor that seems to have grown around his body rather than been forged. His crown resembles twisted horns or broken branches. His face is partially hidden, and his eyes burn with an unnatural light.</p>
+        <p>He rarely moves quickly. He does not need to. When Vaelthar enters a room, everyone understands that something far more powerful than them has arrived.</p>
+        <p>He does not behave like a raging monster. He is calm, patient, and intelligent. He speaks like someone who has already won.</p>
+        <p>He does not hate humanity. That would imply that humanity matters to him. He simply considers mortals temporary creatures that have mistaken freedom for importance.</p>
+        <p>His greatest weapon is not his strength. It is his ability to convince people that surrendering to him is reasonable. He offers power, knowledge, immortality, and peace.</p>
+        <p>To warriors, he promises a world without weakness. To mages, he promises knowledge beyond death. To kings, he promises eternal kingdoms. To the desperate, he promises the end of suffering.</p>
+        <p class="stark">And some people accept.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch9" data-label="The Fall of the Old World" style="--x:.72;--y:.55">
+      <div class="vignette"></div>
+      <p class="num">Chapter IX</p>
+      <h2>The Fall of the Old World</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>Vaelthar's return changes the continent. Kingsreach becomes the center of the resistance. Silverwood becomes a battlefield. Frostpeak becomes divided between those who want to preserve the old magical traditions and those who embrace Vaelthar's power.</p>
+        <p>The deserts of the east become corrupted by ancient magic. The ruins of the Crimson Expanse awaken. The islands of the south become isolated. And Blackspire becomes the seat of Vaelthar's growing power.</p>
+        <p>The heroes realize that they cannot defeat him simply by killing his servants. Darius must be confronted. Seraphine must be confronted. But the real objective is much larger.</p>
+        <p class="stark">They must reach the original prison beneath Blackspire before Vaelthar completely restores himself.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch10" data-label="Darius' End" style="--x:.31;--y:.36">
+      <div class="vignette"></div>
+      <p class="num">Chapter X</p>
+      <h2>Darius' End</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The Warrior eventually confronts Darius. But Darius has already realized the truth. Vaelthar never intended to make him the champion of Silverwood. He was simply a tool.</p>
+        <p>Darius finally understands that everything he believed he was fighting for was shaped by the ancient evil. For the first time, he questions himself.</p>
+        <p>He does not become a hero. He does not ask for forgiveness. Instead, he turns against Vaelthar. Darius uses the Iron Wolves to hold back Vaelthar's armies while the heroes continue toward Blackspire.</p>
+        <p>His final act is not redemption. It is defiance. His last words are these.</p>
+        <blockquote class="said">“You taught me that strength means crushing the weak.”</blockquote>
+        <p class="beat">He raises his sword.</p>
+        <blockquote class="said">“You forgot that strength can also mean standing against you.”<cite>Darius Veyne</cite></blockquote>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch11" data-label="Seraphine's End" style="--x:.51;--y:.2">
+      <div class="vignette"></div>
+      <p class="num">Chapter XI</p>
+      <h2>Seraphine's End</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The Mage eventually confronts Seraphine. By this point, she has become almost unrecognizable. The power she sought has consumed most of her humanity.</p>
+        <p>But she discovers something horrifying. She was never going to become the master of the Heart of Creation. Vaelthar intends to use her as its vessel. The moment she is completely transformed, her identity will disappear.</p>
+        <p>For the first time, she feels genuine fear.</p>
+        <p>She tries to turn against Vaelthar, but she knows she cannot defeat him. Instead, she uses everything she has learned to reveal a weakness in the ancient prison. She gives the Mage the knowledge needed to enter it.</p>
+        <blockquote class="said">“I wanted to become something greater than human.”</blockquote>
+        <p class="beat">She looks toward the darkness.</p>
+        <blockquote class="said">“I should have remembered why humans fear becoming gods.”<cite>Seraphine Voss</cite></blockquote>
+        <p>Her fate remains uncertain.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch12" data-label="The Final War" style="--x:.6;--y:.34">
+      <div class="vignette"></div>
+      <p class="num">Chapter XII</p>
+      <h2>The Final War</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The surviving forces of Eldermere gather at Kingsreach. Warriors from Silverwood. Mages from Frostpeak. Soldiers from the remaining kingdoms. People from villages that have lost everything. Together they march toward Blackspire.</p>
+        <p>But the heroes do not lead the army. Their task is different. While the armies fight Vaelthar's forces above the mountain, the Warrior and the Mage descend beneath Blackspire.</p>
+        <p>They discover the original prison. At its center is the Heart of Creation, and beside it stands Vaelthar. He is no longer imprisoned. He has rebuilt his body using the power of the Heart.</p>
+        <p>For the first time, the heroes stand before the being responsible for everything that has happened. Vaelthar offers them one final choice. He tells them that Eldermere is already dying, that the kingdoms will eventually destroy themselves, and that he can end war forever.</p>
+        <p>All they have to do is kneel.</p>
+        <p>The Warrior refuses. The Mage refuses.</p>
+        <p class="beat">Vaelthar smiles.</p>
+        <p class="stark">And the final battle begins.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="ch13" data-label="The End of the First Age" style="--x:.73;--y:.27">
+      <div class="vignette"></div>
+      <p class="num">Chapter XIII</p>
+      <h2>The End of the First Age</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The battle destroys the chamber. The Heart of Creation begins collapsing. Vaelthar cannot be killed, but the heroes discover that the Heart can be separated from him.</p>
+        <p>The Warrior holds Vaelthar back. The Mage uses the knowledge gained throughout the journey to sever his connection to the Heart. The process begins destroying the entire mountain.</p>
+        <p>Vaelthar finally loses control. For the first time, he becomes furious. The calm ancient king disappears, and the true monster emerges. He attacks everything around him. Mountains collapse. The sky turns black.</p>
+        <p>The Heart shatters. A massive wave of magical energy spreads across Eldermere, and Vaelthar is pulled into the collapsing prison.</p>
+        <p>Before the chamber disappears, he looks directly at the heroes. He does not beg. He does not surrender. He simply speaks.</p>
+        <blockquote class="said">“You believe this is victory.”</blockquote>
+        <p class="beat">A pause.</p>
+        <blockquote class="said">“It is only the beginning.”<cite>Vaelthar</cite></blockquote>
+        <p class="stark">Blackspire collapses. Vaelthar disappears.</p>
+      </div>
+    </article>
+
+    <article class="chapter" id="aftermath" data-label="Aftermath" style="--x:.22;--y:.88">
+      <div class="vignette"></div>
+      <p class="num">Epilogue</p>
+      <h2>Aftermath</h2>
+      <div class="rule"></div>
+      <div class="prose">
+        <p>The war ends, but Eldermere is no longer the same. Silverwood has lost entire villages. Frostpeak has lost many of its greatest mages. Kingsreach is damaged. The ancient ruins have opened.</p>
+        <p>The Heart of Creation is gone.</p>
+        <p class="beat">Or so everyone believes.</p>
+        <p>The Warrior returns to Silverwood. The Mage returns to Frostpeak. For the first time, the two regions begin working together, and the old hatred between Warriors and Mages slowly fades. New roads are built. New settlements rise. The surviving people begin rebuilding.</p>
+        <p>For a brief moment, Eldermere knows peace.</p>
+        <p>But deep beneath the ruins of Blackspire, something remains. A single black fragment of the Heart lies beneath the rubble. It pulses once. Then again.</p>
+        <p>And somewhere beyond the borders of Eldermere, in a place no map has ever recorded, a voice whispers.</p>
+        <blockquote class="said">“Vaelthar was not the first.”</blockquote>
+        <div class="rule" style="justify-self:center"></div>
+        <p class="fin">The end of the first saga</p>
+      </div>
+    </article>
+
+  </div>
+  <div class="pager">
+    <button type="button" id="prev"><small>Previous</small><span class="t" id="prev-t"></span></button>
+    <span class="count" id="count"></span>
+    <button type="button" id="next" class="next"><small>Next</small><span class="t" id="next-t"></span></button>
+  </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var chapters = Array.prototype.slice.call(document.querySelectorAll(".chapter"));
+  var toc = document.getElementById("toc");
+  var leaf = document.getElementById("leaf");
+  var book = document.getElementById("book");
+  var prev = document.getElementById("prev"), next = document.getElementById("next");
+  var links = chapters.map(function (ch, i) {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.href = "#" + ch.id;
+    var num = ch.querySelector(".num").textContent.replace("Chapter ", "");
+    a.innerHTML = "<span></span>";
+    a.firstChild.textContent = num === "Prologue" ? "Pro." : num === "Epilogue" ? "Epi." : num;
+    a.appendChild(document.createTextNode(ch.dataset.label));
+    a.addEventListener("click", function (e) { e.preventDefault(); show(i, true); });
+    li.appendChild(a); toc.appendChild(li);
+    return a;
+  });
+  document.documentElement.classList.add("js");
+  var current = 0;
+  function show(i, scroll) {
+    current = Math.max(0, Math.min(chapters.length - 1, i));
+    chapters.forEach(function (ch, j) { ch.hidden = j !== current; });
+    links.forEach(function (a, j) { a.setAttribute("aria-current", j === current ? "true" : "false"); });
+    prev.disabled = current === 0; next.disabled = current === chapters.length - 1;
+    document.getElementById("prev-t").textContent = current > 0 ? chapters[current - 1].dataset.label : "";
+    document.getElementById("next-t").textContent = current < chapters.length - 1 ? chapters[current + 1].dataset.label : "";
+    document.getElementById("count").textContent = (current + 1) + " / " + chapters.length;
+    try { localStorage.setItem("eldermere-chapter", String(current)); } catch (e) {}
+    try { history.replaceState(null, "", "#" + chapters[current].id); } catch (e) {}
+    if (scroll) {
+      leaf.classList.remove("turn"); void leaf.offsetWidth; leaf.classList.add("turn");
+      book.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    }
+  }
+  prev.addEventListener("click", function () { show(current - 1, true); });
+  next.addEventListener("click", function () { show(current + 1, true); });
+  document.addEventListener("keydown", function (e) {
+    if (e.target.closest && e.target.closest("input, textarea")) return;
+    if (e.key === "ArrowRight") show(current + 1, true);
+    if (e.key === "ArrowLeft") show(current - 1, true);
+  });
+  var start = 0;
+  var fromHash = chapters.findIndex(function (c) { return "#" + c.id === location.hash; });
+  if (fromHash >= 0) start = fromHash;
+  else { try { var s = parseInt(localStorage.getItem("eldermere-chapter"), 10); if (s >= 0) start = s; } catch (e) {} }
+  show(start, false);
+})();
+</script>

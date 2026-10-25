@@ -1,0 +1,653 @@
+<title>Eldermere Wiki</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: an encyclopedia of the seals. Sticky top bar with search, category sidebar, article column with a right-hand infobox. Dark-first like the launcher, with a light variant from its Eldermere Light theme. */
+:root {
+  color-scheme: dark;
+  --bg: #0C0D0E;
+  --surface: #131517;
+  --surface-2: #1A1D1F;
+  --line: #2A2E30;
+  --ink: #E2E4E5;
+  --ink-2: #C7CBCD;
+  --muted: #8E9497;
+  --heart: #C9AE7C;
+  --ember: #C0826E;
+  --frost: #7FA8B6;
+  --moss: #95A693;
+  --void: #A595AF;
+  --link: #8FB8C6;
+  --shadow: rgba(0,0,0,.5);
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --f-serif: "Alegreya", Georgia, "Times New Roman", serif;
+  --f-sans: "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+  --map: url("{{BG}}");
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  color-scheme: light; --bg: #E9EBEC; --surface: #F2F3F4; --surface-2: #E2E5E6; --line: #C9CDCF; --ink: #22282B; --ink-2: #353C40; --muted: #5F666A;
+  --heart: #866B36; --ember: #9A5443; --frost: #3F6F7F; --moss: #55695A; --void: #6E5F7A; --link: #2F6577; --shadow: rgba(30,35,38,.18); } }
+:root[data-theme="light"] {
+  color-scheme: light; --bg: #E9EBEC; --surface: #F2F3F4; --surface-2: #E2E5E6; --line: #C9CDCF; --ink: #22282B; --ink-2: #353C40; --muted: #5F666A;
+  --heart: #866B36; --ember: #9A5443; --frost: #3F6F7F; --moss: #55695A; --void: #6E5F7A; --link: #2F6577; --shadow: rgba(30,35,38,.18); }
+* { box-sizing: border-box; }
+html { scroll-padding-top: 80px; }
+body { background: var(--bg); color: var(--ink); font: 400 1rem/1.6 var(--f-sans); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--heart); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.seal { color: var(--heart); flex: none; }
+
+/* Top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 10px; display: flex; align-items: center; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+.brand:hover { text-decoration: none; }
+.brand b { font: 700 1.25rem/1 var(--f-pixel); letter-spacing: .06em; }
+.brand span { font: 400 .8rem/1 var(--f-pixel); color: var(--heart); letter-spacing: .14em; text-transform: uppercase; }
+.search { position: relative; margin-left: auto; width: min(360px, 100%); min-width: 0; }
+.search input { width: 100%; font: 400 1rem/1 var(--f-sans); color: var(--ink); background: var(--bg); border: 1px solid var(--line); padding: 10px 12px; }
+.search input::placeholder { color: var(--muted); }
+.results { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 12px 30px var(--shadow); list-style: none; margin: 0; padding: 4px; max-height: 60vh; overflow: auto; }
+.results a { display: block; padding: 8px 10px; color: var(--ink); }
+.results a:hover, .results a.sel { background: var(--surface-2); text-decoration: none; }
+.results small { display: block; color: var(--muted); font-size: .8rem; }
+.menu-btn { display: none; font: 600 .8rem/1 var(--f-pixel); letter-spacing: .1em; text-transform: uppercase; background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 10px 12px; cursor: pointer; }
+
+/* Frame */
+.frame { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 80px; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 40px; }
+.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 76px); align-self: start; max-height: calc(100vh - 96px); overflow: auto; display: grid; gap: 22px; font-size: .95rem; padding-bottom: 20px; }
+.side h4 { margin: 0 0 6px; font: 600 .75rem/1 var(--f-pixel); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.side a { display: block; padding: 4px 8px; color: var(--ink-2); border-left: 2px solid transparent; }
+.side a:hover { background: var(--surface); text-decoration: none; }
+.side a[aria-current="page"] { color: var(--ink); border-left-color: var(--heart); background: var(--surface); }
+.side .out { color: var(--heart); }
+
+/* Article */
+.page { min-width: 0; }
+.crumbs { font: 400 .8rem/1 var(--f-pixel); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.page h1 { font: 600 clamp(2rem, 4.6vw, 2.8rem)/1.08 var(--f-pixel); padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.subtitle { font: italic 400 1.15rem/1.4 var(--f-serif); color: var(--muted); margin: 10px 0 22px; }
+.body { font: 400 1.12rem/1.7 var(--f-serif); color: var(--ink-2); }
+.body::after { content: ""; display: block; clear: both; }
+.body p, .body ul, .body ol, .body blockquote, .body .note, .body .toc { margin: 0 0 1em; max-width: 68ch; }
+.body h2 { font: 600 1.45rem/1.2 var(--f-pixel); color: var(--ink); margin: 1.6em 0 .6em; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.body h3 { font: 600 1.1rem/1.3 var(--f-pixel); color: var(--ink); margin: 1.3em 0 .4em; }
+.body ul, .body ol { padding-left: 1.3em; }
+.body li { margin-bottom: .35em; }
+.body b { color: var(--ink); font-weight: 700; }
+.toc { display: inline-block; background: var(--surface); border: 1px solid var(--line); padding: 12px 18px 12px 14px; font: 400 .95rem/1.5 var(--f-sans); }
+.toc strong { display: block; font: 600 .75rem/1 var(--f-pixel); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.toc ol { margin: 0; padding-left: 1.3em; }
+.toc li { margin: 0; }
+.quote { border-left: 3px solid var(--q, var(--heart)); padding: 2px 0 2px 18px; font: italic 400 1.22rem/1.45 var(--f-serif); color: var(--ink); }
+.quote cite { display: block; font: normal 400 .72rem/1.3 var(--f-pixel); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--ember); padding: 10px 14px; font: 400 .95rem/1.5 var(--f-sans); color: var(--ink-2); }
+.cite { font: 400 .7em/1 var(--f-pixel); vertical-align: super; margin-left: 1px; letter-spacing: .02em; }
+.saga-text p.beat { font-style: italic; color: var(--muted); }
+.saga-text p.stark { font-weight: 700; color: var(--ink); }
+.saga-text .said { margin: 0 0 1em; border-left: 3px solid var(--ember); padding: 2px 0 2px 18px; font: italic 400 1.2rem/1.45 var(--f-serif); color: var(--ink); max-width: 68ch; }
+.saga-text .said cite { display: block; font: normal 400 .72rem/1.3 var(--f-pixel); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.saga-text .rule, .saga-text .fin { display: none; }
+.cats { clear: both; margin-top: 36px; padding: 10px 14px; border: 1px solid var(--line); background: var(--surface); font-size: .92rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; }
+
+/* Infobox */
+.infobox { float: right; width: 300px; margin: 0 0 18px 28px; background: var(--surface); border: 1px solid var(--line); font: 400 .93rem/1.45 var(--f-sans); box-shadow: 0 10px 24px var(--shadow); }
+.infobox .ib-title { font: 600 1.1rem/1.2 var(--f-pixel); text-align: center; padding: 12px 12px 4px; color: var(--ink); }
+.infobox .ib-sub { text-align: center; font: italic 400 .95rem/1.3 var(--f-serif); color: var(--muted); padding: 0 12px 10px; }
+.infobox .ib-img { aspect-ratio: 4 / 3; max-width: 100%; border-block: 1px solid var(--line); }
+.ib-crop { background-image: var(--map); background-repeat: no-repeat; background-size: 500% auto; background-position: calc((var(--x) * 1.25 - .125) * 100%) calc((var(--y) * 1.29 - .145) * 100%); }
+.ib-emblem { display: grid; place-items: center; background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--c) 22%, transparent), transparent 65%), var(--surface-2); }
+.ib-emblem svg { width: 46%; height: auto; color: var(--c); }
+.ib-cap { font-size: .82rem; color: var(--muted); text-align: center; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.infobox dl { margin: 0; padding: 6px 12px 12px; display: grid; grid-template-columns: 7.2em minmax(0, 1fr); gap: 7px 10px; }
+.infobox dt { font-weight: 700; color: var(--ink); }
+.infobox dd { margin: 0; color: var(--ink-2); }
+.infobox .ib-head { grid-column: 1 / -1; font: 600 .72rem/1 var(--f-pixel); letter-spacing: .16em; text-transform: uppercase; color: var(--c, var(--heart)); padding-top: 8px; border-top: 1px solid var(--line); margin-top: 4px; }
+
+/* Main page */
+.hello { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 22px 24px; background: var(--surface); border: 1px solid var(--line); margin-bottom: 18px; }
+.hello h1 { border: 0; padding: 0; margin: 0 0 6px; font-size: clamp(1.7rem, 4vw, 2.3rem); }
+.hello p { color: var(--ink-2); font: 400 1.08rem/1.55 var(--f-serif); max-width: 62ch; }
+.hello .count { font: 600 .8rem/1.3 var(--f-pixel); letter-spacing: .1em; text-transform: uppercase; color: var(--heart); text-align: right; }
+.hello .count b { display: block; font-size: 2.2rem; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.mp-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 18px; }
+.panel { background: var(--surface); border: 1px solid var(--line); display: grid; align-content: start; }
+.panel > h2 { font: 600 .8rem/1 var(--f-pixel); letter-spacing: .16em; text-transform: uppercase; color: var(--heart); padding: 12px 16px; border-bottom: 1px solid var(--line); margin: 0; }
+.panel .pbody { padding: 16px; display: grid; gap: 12px; font: 400 1.05rem/1.6 var(--f-serif); color: var(--ink-2); }
+.panel .pbody h3 { font: 600 1.3rem/1.2 var(--f-pixel); color: var(--ink); }
+.mapbox { position: relative; aspect-ratio: 3 / 2; max-width: 100%; background: var(--map) center / cover; }
+.pin { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 6px; font: 600 .78rem/1 var(--f-pixel); letter-spacing: .04em; color: #F2EBDD; text-shadow: 0 1px 3px #000, 0 0 8px #000; white-space: nowrap; }
+.pin::before { content: ""; width: 11px; height: 11px; flex: none; background: #C9AE7C; border: 2px solid #0C0D0E; transform: rotate(45deg); box-shadow: 0 0 0 2px rgba(201,174,124,.35); }
+.pin:hover { text-decoration: none; color: #fff; }
+.pin:hover::before { background: #fff; }
+.pin.l { flex-direction: row-reverse; }
+.mp-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 18px; }
+.mp-cats div { background: var(--surface); padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+.mp-cats h3 { font: 600 .8rem/1 var(--f-pixel); letter-spacing: .14em; text-transform: uppercase; color: var(--c); }
+.mp-cats a { font-size: .98rem; }
+.map-cap { padding: 12px 16px; font: 400 .95rem/1.5 var(--f-sans); color: var(--muted); border-top: 1px solid var(--line); }
+.pbody .kicker { font: 600 .75rem/1 var(--f-pixel); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.body .tbl { overflow-x: auto; max-width: 68ch; margin: 0 0 1em; }
+.body table { border-collapse: collapse; width: 100%; font: 400 .95rem/1.45 var(--f-sans); }
+.body th, .body td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+.body th { color: var(--ink); font-weight: 700; background: var(--surface); }
+.body td b { white-space: nowrap; }
+.formula { display: block; max-width: 68ch; margin: 0 0 1em; padding: 10px 14px; background: var(--surface); border: 1px solid var(--line); font: 500 .95rem/1.5 "SFMono-Regular", Consolas, "Liberation Mono", monospace; color: var(--ink); overflow-x: auto; }
+.dyk { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.spoil { margin-bottom: 18px; }
+
+@media (max-width: 1000px) {
+  .infobox { float: none; width: auto; max-width: 420px; margin: 0 0 22px; }
+  .mp-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 860px) {
+  .frame { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .side { position: static; max-height: none; display: none; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); padding: 14px; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--line); }
+  .side.open { display: grid; }
+  .menu-btn { display: block; }
+  .brand span { display: none; }
+}
+@media (max-width: 520px) {
+  .top-in { flex-wrap: wrap; }
+  .search { order: 3; width: 100%; }
+  .hello { grid-template-columns: minmax(0, 1fr); }
+  .hello .count { text-align: left; }
+  .pin { font-size: 0; gap: 0; }
+}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#main" aria-label="Eldermere Wiki, main page">
+      <svg class="seal" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="20" cy="20" r="14.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="1.2 2.6"/><path d="M20 8.5 31.5 20 20 31.5 8.5 20Z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="20" cy="20" r="3.4" fill="currentColor"/></svg>
+      <div><b>ELDERMERE</b><br><span>Wiki</span></div>
+    </a>
+    <div class="search">
+      <label for="q" hidden>Search the wiki</label>
+      <input id="q" type="search" placeholder="Search Vaelthar, Kingsreach, the Seals…" autocomplete="off">
+      <ul class="results" id="results" hidden></ul>
+    </div>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="side">Menu</button>
+  </div>
+</header>
+
+<div class="frame">
+  <nav class="side" id="side" aria-label="Wiki navigation"></nav>
+  <main class="page" id="page"></main>
+</div>
+
+<script>
+var SITE = "{{SITE}}";
+var SAGA = {{SAGA_JSON}};
+var CATS = [
+  { key: "History", color: "var(--heart)" },
+  { key: "Characters", color: "var(--ember)" },
+  { key: "Factions", color: "var(--void)" },
+  { key: "Places", color: "var(--moss)" },
+  { key: "Artifacts", color: "var(--frost)" },
+  { key: "Gameplay", color: "var(--link)" }
+];
+var SEAL = '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="20" cy="20" r="14.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="1.2 2.6"/><path d="M20 8.5 31.5 20 20 31.5 8.5 20Z" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="20" y="24.2" text-anchor="middle" font-family="Pixelify Sans, monospace" font-size="11" font-weight="700" fill="currentColor">%</text></svg>';
+
+/* Article markup: [[id]] or [[id|label]] links, {{ch:n}} chapter citations. */
+var A = {};
+function art(o) { A[o.id] = o; }
+
+art({ id: "saga", title: "The Age of the Falling Star", cat: "History", sub: "The First Saga of Eldermere",
+  box: { emblem: "★", c: "var(--heart)", cap: "The era that began with the Falling Star", rows: [["Era", "Present age"], ["Began", "The fall of the [[falling-star|Falling Star]]"], ["Antagonist", "[[vaelthar]]"], ["Heroes", "[[warrior|The Warrior]] and [[mage|The Mage]]"], ["Climax", "[[final-war]]"], ["Ended", "The fall of [[blackspire]]"]] },
+  lead: "<b>The Age of the Falling Star</b> is the era of Eldermere's history told in the First Saga. It begins when a fragment of the [[heart]] falls from the sky and weakens [[seals|the Seals]] that hold [[vaelthar]], and it ends with the collapse of [[blackspire]].",
+  sections: [
+    ["Background", "<p>Long before the kingdoms of Eldermere, the [[firstborn]] discovered the Heart of Creation. One of them, Vaelthar, tried to master it and was sealed beneath the continent after the [[war-of-the-firstborn]]. His name was erased and the world forgot him.{{ch:0}}</p>"],
+    ["Synopsis", "<p>Thousands of years later the [[falling-star|Falling Star]] arrives. The magic of [[frostpeak]] becomes unstable, the forests of [[silverwood]] change, ancient ruins awaken and extinct creatures return.{{ch:1}} Two heroes, a [[warrior|Warrior]] from [[ravenford]] and a [[mage|Mage]] from [[wintermere]], follow the same ancient symbol and learn that someone is breaking the seals on purpose.{{ch:2}}</p><p>The Warrior faces [[darius]] and his [[iron-wolves]]; the Mage faces [[seraphine]] and her [[veiled-circle]].{{ch:3}}{{ch:4}} In a Firstborn chamber beneath [[kingsreach]] the heroes meet and learn that the whole continent has become a ritual centred on Blackspire.{{ch:6}}</p><p>Vaelthar announces his return and the old world falls into chaos.{{ch:7}}{{ch:9}} Darius and Seraphine each turn against him in the end.{{ch:10}}{{ch:11}} During the [[final-war]] the heroes descend beneath Blackspire, sever Vaelthar from the Heart and watch the mountain collapse.{{ch:13}}</p>"],
+    ["Aftermath", "<p>Silverwood lost entire villages, Frostpeak lost many of its greatest mages, and Kingsreach was damaged. For the first time, Warriors and Mages began to work together. Beneath the ruins of Blackspire, [[black-fragment|a single black fragment]] of the Heart still pulses.{{ch:14}}</p>"],
+    ["Chapters", "@chapters"]
+  ],
+  quotes: [["You believe this is victory. It is only the beginning.", "Vaelthar"]] });
+
+art({ id: "saga-text", title: "The First Saga (full text)", cat: "History", sub: "The Age of the Falling Star, as told", special: "text" });
+
+art({ id: "timeline", title: "Timeline of Eldermere", cat: "History", sub: "From the Firstborn to the fall of Blackspire", special: "timeline" });
+
+art({ id: "war-of-the-firstborn", title: "War of the Firstborn", cat: "History", sub: "The war that sealed Vaelthar",
+  box: { emblem: "⚔", c: "var(--heart)", rows: [["Era", "Before the kingdoms"], ["Duration", "Centuries"], ["Sides", "[[firstborn]] against the followers of [[vaelthar]]"], ["Result", "Vaelthar defeated and sealed beneath the continent"]] },
+  lead: "The <b>War of the Firstborn</b> was the ancient war between the [[firstborn]] and the followers of [[vaelthar]]. It ended with Vaelthar imprisoned beneath Eldermere.",
+  sections: [
+    ["Cause", "<p>Vaelthar wanted to become the master of the [[heart]]. He believed creation itself was flawed and that the world needed a single will to command it. His followers began conquering the ancient kingdoms.{{ch:0}}</p>"],
+    ["The war", "<p>The Firstborn fought back, and the war lasted for centuries. In the final battle Vaelthar was defeated, but he could not be killed.{{ch:0}}</p>"],
+    ["Result", "<p>The surviving Firstborn imprisoned him beneath the continent, built enormous [[seals]] across Eldermere, and erased his name from history. The Firstborn then disappeared, and kingdoms rose over their ruins.{{ch:0}}</p>"]
+  ] });
+
+art({ id: "final-war", title: "The Final War", cat: "History", sub: "The march on Blackspire",
+  box: { emblem: "⚔", c: "var(--ember)", rows: [["Place", "[[blackspire]]"], ["Mustered at", "[[kingsreach]]"], ["Sides", "The free peoples of Eldermere against the forces of [[vaelthar]]"], ["Result", "The [[heart]] shattered; Vaelthar vanished; Blackspire collapsed"]] },
+  lead: "The <b>Final War</b> was the last battle of the [[saga|Age of the Falling Star]], fought at [[blackspire]] while the heroes descended into Vaelthar's prison.",
+  sections: [
+    ["The muster", "<p>The surviving forces of Eldermere gathered at [[kingsreach]]: Warriors from [[silverwood]], Mages from [[frostpeak]], soldiers from the remaining kingdoms, and people from villages that had lost everything. Together they marched on Blackspire.{{ch:12}}</p><p>On the way, [[darius]] and the [[iron-wolves]] held back Vaelthar's armies so the heroes could go on.{{ch:10}}</p>"],
+    ["Beneath the mountain", "<p>The heroes did not lead the army. While it fought above, the [[warrior|Warrior]] and the [[mage|Mage]] descended beneath Blackspire into the original prison, where Vaelthar stood beside the [[heart]], his body rebuilt with its power. He offered to end war forever if they would kneel. Both refused.{{ch:12}}</p>"],
+    ["The breaking of the Heart", "<p>The Warrior held Vaelthar back while the Mage severed his connection to the Heart, using what [[seraphine]] had revealed. Vaelthar lost control and the true monster emerged. Mountains collapsed, the sky turned black, and the Heart shattered, sending a wave of magical energy across Eldermere. Vaelthar was pulled into the collapsing prison, and Blackspire fell.{{ch:13}}</p>"]
+  ],
+  quotes: [["You believe this is victory. It is only the beginning.", "Vaelthar, as the prison collapsed"]] });
+
+art({ id: "vaelthar", title: "Vaelthar", cat: "Characters", sub: "The First Darkness",
+  box: { emblem: "V", c: "var(--ember)", cap: "Dominion · Unity · Eternal", rows: [["Title", "The First Darkness"], ["Origin", "One of the [[firstborn]]"], ["Sought", "Mastery of the [[heart]]"], ["Prison", "Beneath [[blackspire]]"], ["Servants", "[[darius]] and [[seraphine]], unknowingly"], ["Status", "Vanished when Blackspire collapsed"], ["@", "Appears in"], ["Chapters", "Prologue, VII, VIII, XII, XIII"]] },
+  lead: "<b>Vaelthar</b>, the First Darkness, is the ancient enemy of Eldermere. Once one of the [[firstborn]], he tried to master the [[heart]] and conquer the world. He could not be killed, so he was sealed beneath the continent and his name was erased from history.",
+  sections: [
+    ["Origins", "<p>Vaelthar did not want to use the Heart of Creation. He wanted to become its master. He believed that creation itself was flawed and that peace was nothing more than weakness. In his eyes, the world needed a single will to command it.{{ch:0}}</p><p>His followers conquered the ancient kingdoms, starting the [[war-of-the-firstborn]]. After centuries he was defeated and imprisoned beneath the continent behind the [[seals]].{{ch:0}}</p>"],
+    ["Return", "<p>When the [[falling-star|Falling Star]] weakened the seals, Vaelthar began to stir. He whispered to [[darius]] through the ruins beneath [[silverwood]] and drew [[seraphine]] toward the Heart's power, so that both broke seals for him without knowing it.{{ch:3}}{{ch:6}} When the seals began to fail, he spoke to the world.{{ch:7}}</p>"],
+    ["Appearance", "<p>Vaelthar does not look like a typical demon. He looks ancient, almost regal. His enormous black armor seems to have grown around his body rather than been forged. His crown resembles twisted horns or broken branches. His face is partially hidden and his eyes burn with an unnatural light.{{ch:8}}</p>"],
+    ["Personality", "<p>He rarely moves quickly, because he does not need to. He is calm, patient and intelligent, and speaks like someone who has already won. He does not hate humanity; that would imply humanity matters to him. He considers mortals temporary creatures that have mistaken freedom for importance.{{ch:8}}</p><p>His greatest weapon is persuasion. To warriors he promises a world without weakness, to mages knowledge beyond death, to kings eternal kingdoms, and to the desperate the end of suffering. Some accept.{{ch:8}}</p>"],
+    ["Defeat", "<p>During the [[final-war]] the heroes found him beside the Heart, his body rebuilt. When they refused to kneel, the battle began. Once separated from the Heart he became furious for the first time, and the calm ancient king gave way to the true monster. He was pulled into the collapsing prison beneath [[blackspire]].{{ch:12}}{{ch:13}}</p><p>He did not beg or surrender. A [[black-fragment|black fragment]] of the Heart remains beneath the rubble, and a voice beyond the borders of Eldermere says that Vaelthar was not the first.{{ch:14}}</p>"]
+  ],
+  quotes: [["You built your kingdoms upon my prison.", "Vaelthar, announcing his return"], ["You believe this is victory. It is only the beginning.", "Vaelthar, beneath Blackspire"]] });
+
+art({ id: "darius", title: "Darius Veyne", cat: "Characters", sub: "The Black Wolf",
+  box: { emblem: "D", c: "var(--ember)", rows: [["Epithet", "The Black Wolf"], ["Homeland", "[[silverwood]]"], ["Leads", "[[iron-wolves]]"], ["Rival", "[[seraphine]]"], ["Manipulated by", "[[vaelthar]]"], ["Fate", "Fell holding back Vaelthar's armies"], ["@", "Appears in"], ["Chapters", "III, V, X"]] },
+  lead: "<b>Darius Veyne</b>, known as the Black Wolf, was once one of Silverwood's greatest warriors. He founded the [[iron-wolves]] and became the first great enemy of the [[warrior|Warrior]].",
+  sections: [
+    ["Background", "<p>Darius was respected, disciplined and loyal. Years before the Falling Star, his whole company disappeared while exploring an ancient ruin beneath the forest. He returned alone, and something had changed inside him.{{ch:3}}</p>"],
+    ["The Iron Wolves", "<p>Darius came to believe that the Warriors of Silverwood had grown weak. He abandoned the old traditions and founded the Iron Wolves. He believed civilization had become weak because people fear death, pain and sacrifice.{{ch:3}}</p>"],
+    ["Manipulation", "<p>Vaelthar had been whispering to him through the ruins beneath Silverwood. Darius believed he was using the power beneath the forest. In reality, the power was using him. He broke the seals in Silverwood without knowing whom he served.{{ch:3}}{{ch:6}}</p>"],
+    ["Rivalry with Seraphine", "<p>Darius believed magic had corrupted [[seraphine]]. She thought him an ignorant soldier. Both were serving the same master.{{ch:5}}</p>"],
+    ["Death", "<p>When the Warrior confronted him, Darius had already realized he was only a tool. He did not become a hero and did not ask for forgiveness. He turned against Vaelthar and used the Iron Wolves to hold back his armies while the heroes went on to [[blackspire]]. His final act was defiance, not redemption.{{ch:10}}</p>"]
+  ],
+  quotes: [["Peace creates weakness. War creates strength.", "Darius Veyne"], ["You taught me that strength means crushing the weak. You forgot that strength can also mean standing against you.", "Darius Veyne, his last words"]] });
+
+art({ id: "seraphine", title: "Seraphine Voss", cat: "Characters", sub: "The Frost Witch",
+  box: { emblem: "S", c: "var(--frost)", rows: [["Epithet", "The Frost Witch"], ["Homeland", "[[frostpeak]]"], ["Founded", "[[veiled-circle]]"], ["Rival", "[[darius]]"], ["Manipulated by", "[[vaelthar]]"], ["Fate", "Uncertain"], ["@", "Appears in"], ["Chapters", "IV, V, XI"]] },
+  lead: "<b>Seraphine Voss</b>, known as the Frost Witch, was one of Frostpeak's most brilliant mages. She founded the [[veiled-circle]] and became the greatest enemy of the [[mage|Mage]].",
+  sections: [
+    ["Background", "<p>Seraphine believed magic should never be controlled by governments, councils or traditions. She wanted to find the original source of magic itself. When the [[falling-star|Falling Star]] appeared she became obsessed with it, learned that it held fragments of the [[heart]], and embraced it instead of fearing it.{{ch:4}}</p>"],
+    ["The Veiled Circle", "<p>She gathered forbidden mages into a secret order who believed the ancient laws of magic were lies made by fearful people. They set out to break the seals beneath Frostpeak.{{ch:4}}</p>"],
+    ["Transformation", "<p>Where Darius wanted the world to become stronger, Seraphine wanted it to become greater, and herself to become more than human. She partially succeeded. She became something between a mortal mage and an ancient magical entity, and slowly lost the person she had been.{{ch:4}}</p>"],
+    ["End", "<p>Seraphine discovered she was never meant to master the Heart. Vaelthar intended her to be its vessel, and her identity would vanish once the change was complete. For the first time she felt real fear. Knowing she could not defeat him, she revealed a weakness in the ancient prison and gave the Mage the knowledge needed to enter it. Her fate remains uncertain.{{ch:11}}</p>"]
+  ],
+  quotes: [["I wanted to become something greater than human. I should have remembered why humans fear becoming gods.", "Seraphine Voss"]] });
+
+art({ id: "warrior", title: "The Warrior", cat: "Characters", sub: "Hero of Silverwood",
+  box: { emblem: "W", c: "var(--moss)", rows: [["Homeland", "[[ravenford]], [[silverwood]]"], ["Belief", "Strength exists to protect others"], ["Enemy", "[[darius]]"], ["Ally", "[[mage|The Mage]]"], ["Fate", "Returned to Silverwood"], ["@", "Appears in"], ["Chapters", "II, VI, X, XII, XIII, Epilogue"]] },
+  lead: "<b>The Warrior</b> is one of the two heroes of the First Saga. Born in [[ravenford]] in the forests of [[silverwood]], the Warrior believes strength exists to protect others.",
+  sections: [
+    ["Journey", "<p>The Warrior found evidence of an ancient symbol and of a forgotten civilization, and came to the same truth as the Mage: someone was deliberately breaking the seals.{{ch:2}} Their first great enemy was [[darius]].{{ch:3}} At [[kingsreach]] the Warrior met the Mage for the first time.{{ch:6}}</p>"],
+    ["Beneath Blackspire", "<p>In the [[final-war]] the Warrior descended into the prison, refused to kneel, and held Vaelthar back while the Mage severed him from the [[heart]].{{ch:13}}</p>"],
+    ["Afterwards", "<p>The Warrior returned to Silverwood, and the region began working with Frostpeak for the first time.{{ch:14}}</p>"]
+  ] });
+
+art({ id: "mage", title: "The Mage", cat: "Characters", sub: "Hero of Frostpeak",
+  box: { emblem: "M", c: "var(--frost)", rows: [["Homeland", "[[wintermere]], [[frostpeak]]"], ["Belief", "Knowledge exists to understand the unknown"], ["Enemy", "[[seraphine]]"], ["Ally", "[[warrior|The Warrior]]"], ["Fate", "Returned to Frostpeak"], ["@", "Appears in"], ["Chapters", "II, VI, XI, XII, XIII, Epilogue"]] },
+  lead: "<b>The Mage</b> is one of the two heroes of the First Saga. Born in [[wintermere]] in the mountains of [[frostpeak]], the Mage believes knowledge exists to understand the unknown.",
+  sections: [
+    ["Journey", "<p>The Mage followed the same ancient symbol as the Warrior and learned that the disturbances were not random.{{ch:2}} Their greatest enemy was [[seraphine]].{{ch:4}} The two heroes met beneath [[kingsreach]] and learned the truth about [[vaelthar]].{{ch:6}}</p>"],
+    ["Beneath Blackspire", "<p>With the knowledge Seraphine gave at the end, the Mage could enter the ancient prison.{{ch:11}} There the Mage used everything learned on the journey to sever Vaelthar's connection to the [[heart]].{{ch:13}}</p>"],
+    ["Afterwards", "<p>The Mage returned to Frostpeak, and the old hatred between Warriors and Mages slowly began to fade.{{ch:14}}</p>"]
+  ] });
+
+art({ id: "firstborn", title: "The Firstborn", cat: "Factions", sub: "The civilization before the kingdoms",
+  box: { emblem: "F", c: "var(--heart)", cap: "Creation · Knowledge · Balance", rows: [["Type", "Ancient civilization"], ["Discovered", "The [[heart]]"], ["Enemy", "[[vaelthar]]"], ["Built", "The [[seals]]"], ["Status", "Disappeared"]] },
+  lead: "The <b>Firstborn</b> were the ancient civilization that ruled the world long before the kingdoms of Eldermere. They discovered the [[heart]], defeated [[vaelthar]], and sealed him beneath the continent.",
+  sections: [
+    ["History", "<p>The Firstborn found a primordial power beneath the world and called it the Heart of Creation. When Vaelthar, one of their own, tried to master it, they fought him for centuries in the [[war-of-the-firstborn]]. They could not kill him, so they imprisoned him, built the seals and erased his name.{{ch:0}}</p><p>Then the Firstborn disappeared, and kingdoms rose over their ruins.{{ch:0}}</p>"],
+    ["Legacy", "<p>Their ancient symbol led both heroes to [[kingsreach]], where a chamber beneath the capital holds the oldest surviving record of Eldermere.{{ch:6}} After the Falling Star, their ruins began to awaken.{{ch:1}}</p>"],
+    ["In play", "<p>Players can align with the Firstborn for its titles and quests: ancient lore, recovering relics and keeping the land in balance. See [[story-progress]].</p>"]
+  ] });
+
+art({ id: "iron-wolves", title: "The Iron Wolves", cat: "Factions", sub: "Warband of the Black Wolf",
+  box: { emblem: "I", c: "var(--ember)", cap: "Strength · War · Survival", rows: [["Leader", "[[darius]]"], ["Region", "[[silverwood]]"], ["Creed", "“Peace creates weakness. War creates strength.”"], ["Served", "[[vaelthar]], unknowingly"]] },
+  lead: "The <b>Iron Wolves</b> are the warband founded by [[darius]] after he abandoned the old traditions of Silverwood.",
+  sections: [
+    ["Beliefs", "<p>The Iron Wolves are not mindless monsters. They are warriors and soldiers who genuinely believe they are saving Silverwood from weakness.{{ch:3}}</p>"],
+    ["Role in the saga", "<p>Under Darius they broke the seals in Silverwood.{{ch:6}} At the end, when Darius turned on Vaelthar, the Iron Wolves held back Vaelthar's armies so the heroes could reach [[blackspire]].{{ch:10}}</p>"],
+    ["In play", "<p>Players can align with the Iron Wolves for its titles and quests: martial discipline, defensive trials and fortifying strongholds. See [[story-progress]].</p>"]
+  ] });
+
+art({ id: "veiled-circle", title: "The Veiled Circle", cat: "Factions", sub: "The secret order of forbidden mages",
+  box: { emblem: "C", c: "var(--void)", cap: "Magic · Freedom · Evolution", rows: [["Founder", "[[seraphine]]"], ["Region", "[[frostpeak]]"], ["Goal", "Break the seals beneath Frostpeak"], ["Served", "[[vaelthar]], unknowingly"]] },
+  lead: "The <b>Veiled Circle</b> is a secret order of forbidden mages gathered by [[seraphine]] after the Falling Star appeared.",
+  sections: [
+    ["Beliefs", "<p>Its members believe the ancient laws of magic are lies created by fearful people, and that magic should evolve beyond mortal limits.{{ch:4}}</p>"],
+    ["Role in the saga", "<p>The Circle worked to break the seals beneath [[frostpeak]]. When Vaelthar returned, Frostpeak split between those who kept the old traditions and those who embraced his power.{{ch:4}}{{ch:9}}</p>"],
+    ["In play", "<p>Players can align with the Veiled Circle for its titles and quests: magical research, hidden libraries and useful artifacts. See [[story-progress]].</p>"]
+  ] });
+
+art({ id: "warriors", title: "Warriors of Silverwood", cat: "Factions", sub: "The forest culture of strength",
+  box: { emblem: "W", c: "var(--moss)", rows: [["Region", "[[silverwood]]"], ["Belief", "Strength protects others"], ["Distrust", "Excessive magic"], ["Notable", "[[warrior|The Warrior]], [[darius]]"]] },
+  lead: "The <b>Warriors of Silverwood</b> are the people of the western forests, a culture that values strength and distrusts excessive magic.",
+  sections: [
+    ["Culture", "<p>For generations the Warriors kept their distance from the [[mages]] of Frostpeak, who considered them primitive and impulsive.{{ch:2}} Darius believed they had grown weak and left their traditions behind.{{ch:3}}</p>"],
+    ["After the war", "<p>Silverwood lost entire villages. When the Warrior came home, Silverwood and Frostpeak began working together for the first time.{{ch:14}}</p>"]
+  ] });
+
+art({ id: "mages", title: "Mages of Frostpeak", cat: "Factions", sub: "The mountain culture of knowledge",
+  box: { emblem: "M", c: "var(--frost)", rows: [["Region", "[[frostpeak]]"], ["Belief", "Knowledge explains the unknown"], ["View of Warriors", "Primitive and impulsive"], ["Notable", "[[mage|The Mage]], [[seraphine]]"]] },
+  lead: "The <b>Mages of Frostpeak</b> are the people of the northern mountains, a culture built on the study of magic.",
+  sections: [
+    ["Culture", "<p>The Mages have long thought the [[warriors]] primitive and impulsive.{{ch:2}} Some, like Seraphine, rejected the councils and traditions that governed magic.{{ch:4}}</p>"],
+    ["After the war", "<p>Frostpeak was divided during Vaelthar's rise and lost many of its greatest mages. Afterwards it began rebuilding alongside Silverwood.{{ch:9}}{{ch:14}}</p>"]
+  ] });
+
+function place(o) { o.cat = "Places"; o.box.crop = true; art(o); }
+place({ id: "kingsreach", title: "Kingsreach", sub: "The capital of Eldermere", x: .47, y: .44,
+  box: { cap: "Kingsreach, at the heart of the continent", rows: [["Zone", "[[regions-safety|Safe zone · no PvP]]"], ["Type", "Capital city"], ["Beneath it", "A chamber of the [[firstborn]]"], ["Role", "Centre of the resistance"], ["After the war", "Damaged"]] },
+  lead: "<b>Kingsreach</b> is the capital city at the centre of Eldermere, and the place where the two heroes first met.",
+  sections: [
+    ["The chamber beneath", "<p>Under the capital lies an enormous underground chamber of the Firstborn holding the oldest surviving record of Eldermere. There the heroes learned the truth about [[vaelthar]] and that the seals could not simply be repaired.{{ch:6}}</p>"],
+    ["The resistance", "<p>When Vaelthar returned, Kingsreach became the centre of the resistance and the muster point for the [[final-war]].{{ch:9}}{{ch:12}}</p>"],
+    ["In play", "<p>Kingsreach and the Golden Fields around it are a safe zone. PvP damage, hostile spells and land claims are blocked here. It is the main trade exchange and the place where the Warrior's and the Mage's storylines meet. Both [[ravenford]] and [[wintermere]] are a 4-minute journey away, so neither path has a head start. See [[regions-safety]].</p>"]
+  ] });
+place({ id: "silverwood", title: "Silverwood Forest", sub: "The western forests", x: .27, y: .3,
+  box: { cap: "Silverwood Forest", rows: [["Zone", "[[regions-safety|Starter zone · protected]]"], ["Type", "Forest region"], ["Settlement", "[[ravenford]]"], ["People", "[[warriors]]"], ["Threat", "[[iron-wolves]]"]] },
+  lead: "<b>Silverwood</b> is the great forest of western Eldermere and home of the [[warriors]].",
+  sections: [
+    ["In play", "<p>Silverwood is the Warrior's starting region, with its academy at [[ravenford]] and the outpost of Silverwood Watch. It is a protected starter zone. See [[regions-safety]].</p>"],
+    ["During the saga", "<p>After the Falling Star, the forests of Silverwood began to change.{{ch:1}} An ancient ruin beneath the forest swallowed [[darius]]'s company, and through those ruins Vaelthar whispered to him.{{ch:3}} Silverwood later became a battlefield and its forests were corrupted.{{ch:7}}{{ch:9}}</p><p>The region lost entire villages in the war.{{ch:14}}</p>"]
+  ] });
+place({ id: "ravenford", title: "Ravenford", sub: "A town in Silverwood", x: .31, y: .36,
+  box: { cap: "Ravenford", rows: [["Type", "Town"], ["Region", "[[silverwood]]"], ["Notable", "Home of [[warrior|the Warrior]]"]] },
+  lead: "<b>Ravenford</b> is a town in the forests of [[silverwood]] and the home of [[warrior|the Warrior]].{{ch:2}}",
+  sections: [] });
+place({ id: "frostpeak", title: "Frostpeak Mountains", sub: "The northern mountains", x: .51, y: .15,
+  box: { cap: "The Frostpeak Mountains", rows: [["Zone", "[[regions-safety|Starter zone · protected]]"], ["Type", "Mountain range"], ["Settlement", "[[wintermere]]"], ["People", "[[mages]]"], ["Threat", "[[veiled-circle]]"]] },
+  lead: "<b>Frostpeak</b> is the snowbound mountain range of northern Eldermere and home of the [[mages]].",
+  sections: [
+    ["In play", "<p>Frostpeak is the Mage's starting region, with its academy at [[wintermere]] and the fortress of Frostgate. It is a protected starter zone. See [[regions-safety]].</p>"],
+    ["During the saga", "<p>The Falling Star made Frostpeak's magic unstable.{{ch:1}} The [[veiled-circle]] tried to break the seals beneath it.{{ch:4}} As Vaelthar rose the mountains cracked open, and Frostpeak split between those who kept the old traditions and those who embraced his power.{{ch:7}}{{ch:9}}</p><p>Frostpeak lost many of its greatest mages in the war.{{ch:14}}</p>"]
+  ] });
+place({ id: "wintermere", title: "Wintermere", sub: "A city in Frostpeak", x: .51, y: .19,
+  box: { cap: "Wintermere", rows: [["Type", "City"], ["Region", "[[frostpeak]]"], ["Notable", "Home of [[mage|the Mage]]"]] },
+  lead: "<b>Wintermere</b> lies in the mountains of [[frostpeak]] and is the home of [[mage|the Mage]].{{ch:2}}",
+  sections: [] });
+place({ id: "blackspire", title: "Blackspire", sub: "Seat of the First Darkness", x: .75, y: .26,
+  box: { cap: "Blackspire, before its fall", rows: [["Zone", "[[regions-safety|Story location]]"], ["Type", "Volcanic fortress"], ["Beneath it", "Vaelthar's original prison"], ["Role", "Centre of the ritual"], ["Status", "Collapsed"]] },
+  lead: "<b>Blackspire</b> was the burning mountain of eastern Eldermere. Beneath it lay the original prison of [[vaelthar]].",
+  sections: [
+    ["During the saga", "<p>After the Falling Star, something beneath Blackspire began to breathe again.{{ch:1}} The breaking of the seals across the continent formed one great ritual with Blackspire at its centre, and it became the seat of Vaelthar's growing power.{{ch:6}}{{ch:9}}</p>"],
+    ["Fall", "<p>During the [[final-war]] the heroes descended into the prison, and when the [[heart]] shattered the mountain collapsed.{{ch:13}} A [[black-fragment|black fragment]] of the Heart still lies beneath its ruins.{{ch:14}}</p>"]
+  ] });
+place({ id: "crimson-expanse", title: "The Crimson Expanse", sub: "The eastern deserts", x: .72, y: .5,
+  box: { cap: "The Crimson Expanse and the Sunscorch Desert", rows: [["Zone", "[[regions-safety|Contested zone · opt-in PvP]]"], ["Type", "Desert region"], ["Feature", "Ancient ruins"]] },
+  lead: "<b>The Crimson Expanse</b> is the desert country of eastern Eldermere, scattered with ancient ruins.",
+  sections: [
+    ["During the saga", "<p>When Vaelthar returned, the deserts of the east were corrupted by ancient magic and the ruins of the Crimson Expanse awakened.{{ch:9}}</p>"],
+    ["In play", "<p>Together with the [[ashen-wastes]], the Crimson Expanse is the contested heart of the map. Its Sunscorch outpost can be captured by clans, and players who opt in to PvP can fight here. See [[outposts]].</p>"]
+  ] });
+place({ id: "southern-isles", title: "Valenor & the Southern Isles", sub: "The far south", x: .6, y: .8,
+  box: { cap: "Valenor and the islands south of the continent", rows: [["Zone", "[[regions-safety|Endgame · story-gated]]"], ["Type", "Fortress and island chains"], ["Content", "Raids and world bosses"]] },
+  lead: "<b>Valenor</b> and <b>the Southern Isles</b> lie at the southern edge of Eldermere.",
+  sections: [
+    ["During the saga", "<p>As Vaelthar rose, the oceans became dangerous and the islands of the south were cut off from the continent.{{ch:7}}{{ch:9}}</p>"],
+    ["In play", "<p>This is the endgame region, with multi-stage raids, world boss events and the end of each storyline. It opens through story milestones, and the server community unlocks its southern gates together. No clan can lock other players out of story content here. See [[story-progress]].</p>"]
+  ] });
+place({ id: "ashen-wastes", title: "The Ashen Wastes", sub: "The burnt badlands", x: .63, y: .36,
+  box: { cap: "The Ashen Wastes, between Kingsreach and Blackspire", rows: [["Zone", "[[regions-safety|Contested · opt-in PvP]]"], ["Type", "Badlands"], ["Outpost", "Ashen Forge"], ["Resources", "High-tier ores"]] },
+  lead: "<b>The Ashen Wastes</b> are the scorched badlands west of [[blackspire]], rich in high-tier ore.",
+  sections: [["In play", "<p>With the [[crimson-expanse]], the Wastes make up the contested zone. The Ashen Forge outpost here is one of the main prizes of clan warfare. See [[outposts]].</p>"]] });
+place({ id: "emberlands", title: "The Emberlands", sub: "The southern frontier", x: .3, y: .68,
+  box: { cap: "The Emberlands and the Emberfall Peaks", rows: [["Zone", "[[regions-safety|High risk]]"], ["Type", "Volcanic frontier"], ["Content", "Elite monsters, group dungeons, rare resources"]] },
+  lead: "<b>The Emberlands</b> and the volcanic <b>Emberfall Peaks</b> form the dangerous frontier of southern Eldermere.",
+  sections: [["In play", "<p>This is the high-risk wilderness. Elite monsters roam here, mid-tier group dungeons open here, and rare resource nodes belong to no clan. See [[regions-safety]].</p>"]] });
+
+art({ id: "heart", title: "The Heart of Creation", cat: "Artifacts", sub: "The primordial power beneath the world",
+  box: { emblem: "◆", c: "var(--heart)", rows: [["Type", "Primordial power"], ["Found by", "[[firstborn]]"], ["Sought by", "[[vaelthar]], [[seraphine]]"], ["Fragment", "The [[falling-star|Falling Star]]"], ["Status", "Shattered, or so everyone believes"]] },
+  lead: "The <b>Heart of Creation</b> is a power beyond ordinary magic, buried beneath the world and discovered by the [[firstborn]].",
+  sections: [
+    ["Power", "<p>It could create life, reshape the land, bend magic and destroy entire civilizations.{{ch:0}}</p>"],
+    ["History", "<p>Vaelthar's wish to master it caused the [[war-of-the-firstborn]].{{ch:0}} Thousands of years later, a fragment of it fell from the sky as the Falling Star.{{ch:1}} Vaelthar later rebuilt his body with its power and meant to use [[seraphine]] as its vessel.{{ch:11}}{{ch:12}}</p>"],
+    ["Shattering", "<p>Beneath [[blackspire]] the heroes separated the Heart from Vaelthar, and it shattered in a wave of magical energy across Eldermere. Everyone believes it is gone, but a [[black-fragment|black fragment]] survives.{{ch:13}}{{ch:14}}</p>"]
+  ] });
+art({ id: "falling-star", title: "The Falling Star", cat: "Artifacts", sub: "The fragment in the sky",
+  box: { emblem: "★", c: "var(--frost)", rows: [["Type", "Fragment of the [[heart]]"], ["Believed to be", "A natural phenomenon"], ["Effect", "Weakens the [[seals]]"]] },
+  lead: "The <b>Falling Star</b> is the strange object that fell from the sky thousands of years after the sealing of [[vaelthar]], and gave its name to the age.",
+  sections: [
+    ["Nature", "<p>The people of Eldermere believe it is a natural phenomenon. It is in fact a fragment of the ancient Heart of Creation.{{ch:1}}</p>"],
+    ["Effects", "<p>Its arrival weakened the seals. Frostpeak's magic became unstable, Silverwood's forests changed, ruins awakened, extinct creatures returned, and something stirred beneath Blackspire. Mages took it for a magical disturbance, warriors for an invasion, and kings for a political crisis.{{ch:1}}</p><p>[[seraphine]] studied the Star and embraced its power.{{ch:4}}</p>"]
+  ] });
+art({ id: "seals", title: "The Seals", cat: "Artifacts", sub: "The prison of the First Darkness",
+  box: { emblem: "◎", c: "var(--void)", rows: [["Built by", "[[firstborn]]"], ["Purpose", "Imprison [[vaelthar]]"], ["Weakened by", "The [[falling-star|Falling Star]]"], ["Centre", "[[blackspire]]"]] },
+  lead: "The <b>Seals</b> are the enormous wards the [[firstborn]] built across Eldermere to hold [[vaelthar]] beneath the continent.",
+  sections: [
+    ["Failure", "<p>The Falling Star weakened them.{{ch:1}} [[darius]] broke the seals in Silverwood and [[seraphine]] those beneath Frostpeak, while other factions did the same without knowing it. Together this turned the continent into a ritual centred on Blackspire.{{ch:6}}</p><p>The heroes learned that the seals could not simply be repaired. Someone had to enter the prison and face Vaelthar.{{ch:6}}</p>"]
+  ] });
+art({ id: "black-fragment", title: "The Black Fragment", cat: "Artifacts", sub: "What remains beneath Blackspire",
+  box: { emblem: "◆", c: "var(--ember)", rows: [["Type", "Fragment of the [[heart]]"], ["Location", "Beneath the ruins of [[blackspire]]"], ["Status", "Pulsing"]] },
+  lead: "The <b>Black Fragment</b> is a single shard of the [[heart]] that lies beneath the rubble of [[blackspire]] after the war.",
+  sections: [["The last pages", "<p>It pulses once, then again. Somewhere beyond the borders of Eldermere, in a place no map has ever recorded, a voice whispers.{{ch:14}}</p>"]],
+  quotes: [["Vaelthar was not the first.", "An unknown voice"]] });
+
+art({ id: "regions-safety", title: "Regions & Safety Zones", cat: "Gameplay", sub: "How the continent is laid out",
+  box: { emblem: "◎", c: "var(--link)", rows: [["Regions", "6"], ["Safety tiers", "Safe, Adventure, Contested, Endgame"], ["Travel to capital", "4 minutes from either start"]] },
+  lead: "Eldermere is split into <b>six regions</b>, each with a safety tier that decides whether players can fight there and what you can build.",
+  sections: [
+    ["The six regions", '<div class="tbl"><table><thead><tr><th>Region</th><th>Tier</th><th>What is there</th></tr></thead><tbody><tr><td>[[silverwood]]</td><td><b>Protected start</b></td><td>Warrior academy at [[ravenford]], Silverwood Watch outpost</td></tr><tr><td>[[frostpeak]]</td><td><b>Protected start</b></td><td>Mage academy at [[wintermere]], Frostgate Fortress</td></tr><tr><td>[[kingsreach]] &amp; Golden Fields</td><td><b>Safe</b></td><td>Capital, trade exchange, where both storylines meet</td></tr><tr><td>[[ashen-wastes]] &amp; [[crimson-expanse]]</td><td><b>Contested</b></td><td>Capturable outposts, high-tier ores, clan warfare</td></tr><tr><td>[[emberlands]] &amp; Emberfall Peaks</td><td><b>High risk</b></td><td>Elite monsters, group dungeons, unclaimed rare resources</td></tr><tr><td>[[southern-isles|Valenor &amp; the Southern Isles]]</td><td><b>Endgame</b></td><td>Raids, world bosses, story-gated events</td></tr></tbody></table></div>'],
+    ["Safety tiers", "<ol><li><b>Safe</b> (academies and the capital). PvP damage, hostile spells and land claims are blocked.</li><li><b>Adventure</b> (most of the world). Normal survival against monsters. Players under [[newcomer-protection|newcomer protection]] cannot be attacked.</li><li><b>Contested</b> (the badlands). Full PvP for players who opt in. Outposts can be captured. Being in combat blocks fast travel.</li><li><b>Endgame</b> (Valenor and the Southern Isles). Opened by story milestones. Clans cannot lock other players out of story content.</li></ol>"],
+    ["Fair starts", "<p>The road from Ravenford to Kingsreach and the road from Wintermere to Kingsreach both take <b>4 minutes</b> (240 seconds) on foot, so neither path reaches the capital's market first.</p><p>Along every route you meet something worth stopping for, such as a landmark, a point of interest or a choice, roughly every 40 seconds.</p>"]
+  ] });
+
+art({ id: "newcomer-protection", title: "Newcomer Protection & PvP", cat: "Gameplay", sub: "Who can fight whom",
+  box: { emblem: "◈", c: "var(--moss)", rows: [["Protection", "15 real-world days"], ["PvP", "Opt-in, contested zones"], ["Combat tag", "Blocks fast travel"]] },
+  lead: "New players are protected from other players for their first <b>15 days</b>, and PvP is always something you choose.",
+  sections: [
+    ["Newcomer protection", "<p>For 15 real-world days after joining, other players cannot attack you in the open world. The timer cannot be paused, and it does not come back if you change clans.</p>"],
+    ["Opting in to PvP", "<p>Full PvP only happens in contested zones, between players who have opted in. Safe zones block PvP damage for everyone. While you are tagged in combat you cannot fast travel away.</p>"],
+    ["See also", "<p>[[death-penalty]] explains what you lose if you fall in a fight.</p>"]
+  ] });
+
+art({ id: "death-penalty", title: "Death & Material Loss", cat: "Gameplay", sub: "What you lose in PvP",
+  box: { emblem: "✕", c: "var(--ember)", rows: [["Loss", "10% of carried raw materials"], ["Cap", "64 items"], ["Never lost", "XP, bound gear, relics, abilities"]] },
+  lead: "Falling in PvP costs a small, capped share of the raw materials you carry. Nothing you have earned permanently is ever taken.",
+  sections: [
+    ["The rule", '<p>You drop <b>10% of the raw materials you are carrying</b>, but never more than <b>64</b>:</p><code class="formula">dropped = min(carried × 10%, 64)</code><p>Carrying 500 materials, you drop 50 and keep 450. Carrying 1,000, the cap applies and you drop 64.</p>'],
+    ["What is never lost", "<ul><li>Character XP and levels</li><li>Bound equipment and soulbound relics</li><li>Unlocked abilities</li><li>Story progress</li></ul>"],
+    ["Compared with other servers", '<div class="tbl"><table><thead><tr><th></th><th>Classic MMO server</th><th>Hardcore sandbox</th><th>Eldermere</th></tr></thead><tbody><tr><td>Building</td><td>Fixed world, no building</td><td>Build anywhere</td><td>Build inside your claims</td></tr><tr><td>Land</td><td>Fixed zones</td><td>Players enforce it</td><td>Three levels of [[land-claims|claims]]</td></tr><tr><td>Death</td><td>Small currency loss</td><td>Lose your inventory</td><td>10% of materials, at most 64</td></tr></tbody></table></div>']
+  ] });
+
+art({ id: "land-claims", title: "Land Claims", cat: "Gameplay", sub: "Building without griefing",
+  box: { emblem: "▣", c: "var(--moss)", rows: [["Levels", "Personal, clan, war outposts"], ["Unlocked by", "Story milestones"]] },
+  lead: "Eldermere is a persistent world you can build in, but only inside land you have claimed. There are <b>three levels</b> of claim.",
+  sections: [
+    ["1. Personal claims", "<p>Unlocked through story milestones. The server checks every block placed or broken and every chest opened, and blocks anyone you have not allowed in.</p>"],
+    ["2. Clan claims", "<p>A shared base for a clan, with permissions by rank: leader, officer and member. Clan claims cannot overlap public roads, neutral quest hubs, dungeon entrances or capture zones.</p>"],
+    ["3. War outposts", "<p>Fortresses placed by the server, not built by players. During a war their gates can be attacked through siege mechanics, but the terrain around them cannot be dug or changed. See [[outposts]].</p>"]
+  ] });
+
+art({ id: "outposts", title: "Outposts & Clan War", cat: "Gameplay", sub: "Fighting over the badlands",
+  box: { emblem: "⚔", c: "var(--ember)", rows: [["Where", "[[ashen-wastes]], [[crimson-expanse]]"], ["Max held", "2 per clan"], ["Capture", "5 min with 3 attackers"], ["Lock", "10 min after capture"], ["Storage", "480 War Supplies"]] },
+  lead: "<b>Outposts</b> are capturable fortresses in the contested zone. Their rules stop a large clan from winning just by bringing more people, and stop any one clan from taking over the map.",
+  sections: [
+    ["Capturing", '<p>Only <b>3 attackers count</b> towards capture speed. Bringing 50 players captures exactly as fast as bringing 3. Defenders standing on the point slow the capture, and once there are as many defenders as counted attackers, it stops.</p><code class="formula">speed = min(attackers, 3) × base × (1 − defenders ÷ min(attackers, 3))</code><p>Three attackers on an empty point take it in <b>5 minutes</b>. After an outpost changes hands it is locked for <b>10 minutes</b>.</p>'],
+    ["War Supplies", '<p>Each outpost produces War Supplies, with less from the second one, and a clan can hold <b>two outposts at most</b>:</p><div class="tbl"><table><thead><tr><th>Outposts held</th><th>Supplies per hour</th></tr></thead><tbody><tr><td>1</td><td>60</td></tr><tr><td>2</td><td>105 (60 + 45)</td></tr><tr><td>3</td><td>Not allowed</td></tr></tbody></table></div><p>Production stops when the clan\'s store reaches <b>480</b>. War Supplies pay for declaring wars, repairing gates and upgrading outposts. They can never be turned into gold or gear.</p>'],
+    ["Fair transfers", "<p>When an outpost is captured, the server checks the capture is allowed, pays the previous owner what they had earned, hands it over, starts the 10-minute lock and records it, all in one step. If any part fails, none of it happens, so supplies can never be duplicated.</p>"]
+  ] });
+
+art({ id: "story-progress", title: "Story & Clan Progress", cat: "Gameplay", sub: "Three layers that don't block each other",
+  box: { emblem: "❖", c: "var(--heart)", rows: [["Personal", "Your path and choices"], ["Clan", "Politics and territory"], ["World", "Server-wide milestones"]] },
+  lead: "Your own story never depends on whether your clan is winning. Progress happens in <b>three separate layers</b>.",
+  sections: [
+    ["Personal story", "<p>Your Warrior or Mage path, class abilities, bound artifacts and story choices belong to your account. PvP deaths and clan defeats cannot undo them.</p>"],
+    ["Clan politics", "<p>Alliances, [[outposts|outpost]] captures and trade wars make up a second story that players write themselves. The server records it as it happens.</p>"],
+    ["World events", "<p>Server-wide milestones, such as opening the southern gates of [[southern-isles|Valenor]], unlock when the whole community contributes, through dungeon clears and regional objectives.</p>"],
+    ["Factions and clans", "<p>You can align with one of the lore factions, [[firstborn]], [[iron-wolves]], [[veiled-circle]] or the [[vaelthar-order]], for its titles and quests. Clans stay neutral, so one clan can include players from different factions.</p>"]
+  ] });
+
+art({ id: "vaelthar-order", title: "The Vaelthar Order", cat: "Factions", sub: "Those who accepted",
+  box: { emblem: "V", c: "var(--void)", cap: "Dominion · Order · Eternity", rows: [["Serves", "[[vaelthar]]"], ["Focus", "Endgame secrets, the seals, high-tier trials"]] },
+  lead: "The <b>Vaelthar Order</b> is made up of those who accepted [[vaelthar]]'s offer of power, knowledge, immortality and peace.",
+  sections: [
+    ["In the saga", "<p>Vaelthar's greatest weapon was persuasion. He offered warriors a world without weakness, mages knowledge beyond death, kings eternal kingdoms and the desperate an end to suffering, and some people accepted.{{ch:8}}</p>"],
+    ["In play", "<p>Players can align with the Order for its titles and quests, which deal with endgame secrets, the ancient [[seals]] and high-tier trials. See [[story-progress]].</p>"]
+  ] });
+
+var TIMELINE = [
+  ["Before the kingdoms", "The [[firstborn]] rule the world and discover the [[heart]].", 0],
+  ["Before the kingdoms", "[[vaelthar]] seeks to master the Heart. His followers conquer the ancient kingdoms.", 0],
+  ["Centuries", "The [[war-of-the-firstborn]]. Vaelthar is defeated but cannot be killed.", 0],
+  ["The sealing", "Vaelthar is imprisoned beneath the continent. The [[seals]] are built and his name is erased.", 0],
+  ["The long forgetting", "The Firstborn disappear. Kingdoms rise over their ruins.", 0],
+  ["Thousands of years later", "The [[falling-star|Falling Star]] falls. The seals begin to weaken.", 1],
+  ["The present age", "The [[warrior|Warrior]] and the [[mage|Mage]] find the same ancient symbol.", 2],
+  ["The present age", "[[darius]] leads the [[iron-wolves]]. [[seraphine]] founds the [[veiled-circle]].", 3],
+  ["The present age", "The heroes meet beneath [[kingsreach]] and learn the truth.", 6],
+  ["The rise", "Vaelthar speaks to the world. Cities fall and the old world crumbles.", 7],
+  ["The rise", "Darius and Seraphine turn against Vaelthar.", 10],
+  ["The end of the First Age", "The [[final-war]]. The Heart shatters and [[blackspire]] collapses.", 13],
+  ["Aftermath", "Silverwood and Frostpeak rebuild together. A [[black-fragment|black fragment]] pulses beneath Blackspire.", 14]
+];
+
+var DYK = [
+  "…that the Firstborn erased Vaelthar's name from history after sealing him? ([[vaelthar]])",
+  "…that the people of Eldermere believed the [[falling-star|Falling Star]] was a natural phenomenon?",
+  "…that [[darius]]'s whole company vanished in a ruin beneath Silverwood, and only he came back?",
+  "…that Vaelthar meant to use [[seraphine]] as the vessel of the Heart?",
+  "…that the breaking of the [[seals]] turned the whole continent into a single ritual?",
+  "…that bringing 50 players to an [[outposts|outpost]] captures it no faster than bringing 3?",
+  "…that falling in PvP never costs more than 64 materials? ([[death-penalty]])"
+];
+
+var PINS = [["kingsreach", .47, .44], ["silverwood", .27, .3], ["ravenford", .31, .36, 1], ["frostpeak", .56, .11], ["wintermere", .5, .2, 1], ["blackspire", .75, .26], ["ashen-wastes", .63, .36, 1], ["crimson-expanse", .74, .48], ["emberlands", .3, .68], ["southern-isles", .6, .8]];
+
+/* ---------- rendering ---------- */
+var page = document.getElementById("page"), side = document.getElementById("side");
+var ORDER = ["saga", "saga-text", "timeline", "war-of-the-firstborn", "final-war", "vaelthar", "darius", "seraphine", "warrior", "mage", "firstborn", "iron-wolves", "veiled-circle", "vaelthar-order", "warriors", "mages", "kingsreach", "silverwood", "ravenford", "frostpeak", "wintermere", "blackspire", "ashen-wastes", "crimson-expanse", "emberlands", "southern-isles", "heart", "falling-star", "seals", "black-fragment", "regions-safety", "newcomer-protection", "death-penalty", "land-claims", "outposts", "story-progress"];
+var ROMAN = ["Prologue", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "Epilogue"];
+
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function md(s) {
+  return String(s)
+    .replace(/\[\[([a-z0-9-]+)(?:\|([^\]]+))?\]\]/g, function (_, id, label, at, str) {
+      var a = A[id], text = label || (a ? a.title : id);
+      // "the [[firstborn]]" should read "the Firstborn", not "the The Firstborn"
+      if (!label && /\bthe\s$/i.test(str.slice(Math.max(0, at - 4), at))) text = text.replace(/^The /, "");
+      return '<a href="#' + id + '">' + esc(text) + "</a>";
+    })
+    .replace(/\{\{ch:(\d+)\}\}/g, function (_, n) { return '<a class="cite" href="#text-' + n + '" title="' + esc(SAGA[n].label) + '">[' + ROMAN[n] + "]</a>"; });
+}
+function catColor(cat) { for (var i = 0; i < CATS.length; i++) if (CATS[i].key === cat) return CATS[i].color; return "var(--heart)"; }
+
+function renderSide(current) {
+  function li(id, label) { return '<li><a href="#' + id + '"' + (current === id ? ' aria-current="page"' : "") + ">" + label + "</a></li>"; }
+  var h = "<div><h4>Navigate</h4><ul>" + li("main", "Main page") + li("timeline", "Timeline") + li("saga-text", "Read the saga") + '<li><a class="out" href="' + SITE + '" target="_blank" rel="noopener">Play on sopelcraft.gg ↗</a></li></ul></div>';
+  CATS.forEach(function (c) {
+    h += "<div><h4>" + c.key + "</h4><ul>";
+    ORDER.forEach(function (id) { var a = A[id]; if (a.cat === c.key && !a.special) h += li(id, esc(a.title)); });
+    h += "</ul></div>";
+  });
+  side.innerHTML = h;
+}
+
+function infobox(a) {
+  var b = a.box, c = b.c || catColor(a.cat);
+  var h = '<aside class="infobox" style="--c:' + c + '"><div class="ib-title">' + esc(a.title) + "</div>" + (a.sub ? '<div class="ib-sub">' + esc(a.sub) + "</div>" : "");
+  if (b.crop) h += '<div class="ib-img ib-crop" style="--x:' + a.x + ";--y:" + a.y + '" role="img" aria-label="' + esc(a.title) + ' on the map of Eldermere"></div>';
+  else h += '<div class="ib-img ib-emblem">' + SEAL.replace("%", esc(b.emblem || a.title[0])) + "</div>";
+  if (b.cap) h += '<div class="ib-cap">' + esc(b.cap) + "</div>";
+  h += "<dl>";
+  b.rows.forEach(function (r) { h += r[0] === "@" ? '<div class="ib-head">' + esc(r[1]) + "</div>" : "<dt>" + esc(r[0]) + "</dt><dd>" + md(r[1]) + "</dd>"; });
+  return h + "</dl></aside>";
+}
+
+function quoteBlock(q, c) { return '<blockquote class="quote" style="--q:' + c + '">“' + esc(q[0]) + "”<cite>" + esc(q[1]) + "</cite></blockquote>"; }
+function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-"); }
+
+function renderArticle(a) {
+  var c = catColor(a.cat);
+  var h = '<p class="crumbs">' + esc(a.cat) + "</p><h1>" + esc(a.title) + "</h1>" + (a.sub ? '<p class="subtitle">' + esc(a.sub) + "</p>" : "");
+  h += '<div class="body' + (a.special === "text" ? " saga-text" : "") + '">';
+  if (a.special === "text") {
+    h += '<p>The complete text of the First Saga, from the Firstborn to the last whisper beneath Blackspire. Chapter markers like <a class="cite" href="#text-3">[III]</a> across the wiki link here.</p>';
+    h += '<div class="toc"><strong>Contents</strong><ol>' + SAGA.map(function (s, i) { return '<li><a href="#text-' + i + '">' + esc(s.num + ": " + s.label) + "</a></li>"; }).join("") + "</ol></div>";
+    SAGA.forEach(function (s, i) { h += '<h2 id="text-' + i + '">' + esc(s.num) + ": " + esc(s.label) + "</h2>" + s.html; });
+  } else if (a.special === "timeline") {
+    h += "<p>Events of Eldermere in order, from the age of the Firstborn to the end of the First Saga.</p><ol>";
+    TIMELINE.forEach(function (t) { h += "<li><b>" + esc(t[0]) + ".</b> " + md(t[1]) + md("{{ch:" + t[2] + "}}") + "</li>"; });
+    h += "</ol>";
+  } else {
+    if (a.box) h += infobox(a);
+    h += "<p>" + md(a.lead) + "</p>";
+    if (a.sections.length > 1) h += '<div class="toc"><strong>Contents</strong><ol>' + a.sections.map(function (s) { return '<li><a href="#' + a.id + "~" + slug(s[0]) + '">' + esc(s[0]) + "</a></li>"; }).join("") + (a.quotes ? '<li><a href="#' + a.id + '~quotes">Quotes</a></li>' : "") + "</ol></div>";
+    a.sections.forEach(function (s) {
+      h += '<h2 id="sec-' + slug(s[0]) + '">' + esc(s[0]) + "</h2>";
+      if (s[1] === "@chapters") h += "<ol>" + SAGA.map(function (x, i) { return '<li><a href="#text-' + i + '">' + esc(x.num + ": " + x.label) + "</a></li>"; }).join("") + "</ol>";
+      else h += md(s[1]);
+    });
+    if (a.quotes) { h += '<h2 id="sec-quotes">Quotes</h2>'; a.quotes.forEach(function (q) { h += quoteBlock(q, c); }); }
+    var seen = {}, related = ((a.lead + JSON.stringify(a.sections) + JSON.stringify(a.box || {})).match(/\[\[([a-z0-9-]+)/g) || [])
+      .map(function (r) { return r.slice(2); }).filter(function (id) { if (seen[id] || id === a.id || !A[id]) return false; seen[id] = 1; return true; });
+    if (related.length) h += '<h2 id="sec-see-also">See also</h2><ul>' + related.slice(0, 8).map(function (id) { return '<li><a href="#' + id + '">' + esc(A[id].title) + '</a> <span style="color:var(--muted)">· ' + esc(A[id].cat) + "</span></li>"; }).join("") + "</ul>";
+  }
+  h += "</div>";
+  h += '<div class="cats"><span>Category: <a href="#main">' + esc(a.cat) + '</a></span><span>Source: ' + (a.cat === "Gameplay" ? "Eldermere gameplay design" : '<a href="#saga-text">The First Saga</a>') + '</span></div>';
+  return h;
+}
+
+function renderMain() {
+  var n = Object.keys(A).length;
+  var h = '<section class="hello"><div><h1>Welcome to the Eldermere Wiki</h1><p>The encyclopedia of Eldermere, the world of the <a href="' + SITE + '" target="_blank" rel="noopener">sopelcraft.gg</a> Minecraft server. Read about the Firstborn, the Seals and the return of the First Darkness, and learn how regions, PvP, claims and outposts work.</p></div><div class="count"><b>' + n + "</b>articles</div></section>";
+  h += '<p class="note spoil">This wiki covers the whole First Saga, including how it ends. Start with <a href="#saga">The Age of the Falling Star</a> or <a href="#saga-text">read the saga</a> from the beginning.</p>';
+  h += '<div class="mp-grid"><div class="panel"><h2>Map of Eldermere</h2><div class="mapbox" role="img" aria-label="Map of Eldermere with links to places">';
+  PINS.forEach(function (p) { h += '<a class="pin' + (p[3] ? " l" : "") + '" style="left:' + p[1] * 100 + "%;top:" + p[2] * 100 + '%" href="#' + p[0] + '" title="' + esc(A[p[0]].title) + '">' + esc(A[p[0]].title.replace("The ", "").replace(" Mountains", "").replace(" Forest", "")) + "</a>"; });
+  h += '</div><p class="map-cap">Select a place on the map to open its article. Eight places from the saga are marked, from the capital at <a href="#kingsreach">Kingsreach</a> to the ruins of <a href="#blackspire">Blackspire</a>.</p></div><div class="panel"><h2>Featured article</h2><div class="pbody"><h3><a href="#vaelthar">Vaelthar</a></h3><p>' + md(A.vaelthar.lead) + "</p>" + quoteBlock(A.vaelthar.quotes[0], "var(--ember)") + '<p><a href="#vaelthar">Read more →</a></p></div></div></div>';
+  h += '<div class="mp-grid" style="margin-top:18px"><div class="panel"><h2>Did you know…</h2><div class="pbody"><ul class="dyk">' + DYK.map(function (d) { return "<li>" + md(d) + "</li>"; }).join("") + '</ul></div></div><div class="panel"><h2>From the saga</h2><div class="pbody"><p class="kicker">Chapter VI · The Truth of Kingsreach</p><p>' + md("Two heroes meet for the first time beneath [[kingsreach]], and learn that the ancient enemy was never destroyed, only imprisoned. The seals cannot simply be repaired. Someone must enter the prison and face [[vaelthar]] directly.") + '</p>' + quoteBlock(["Darius is breaking the seals in Silverwood. Seraphine is breaking the seals beneath Frostpeak.", "The First Saga, Chapter VI"], "var(--heart)") + '<p><a href="#text-6">Read chapter VI →</a></p></div></div></div>';
+  h += '<div class="mp-cats">';
+  CATS.forEach(function (c) {
+    h += '<div style="--c:' + c.color + '"><h3>' + c.key + "</h3>";
+    ORDER.forEach(function (id) { if (A[id].cat === c.key) h += '<a href="#' + id + '">' + esc(A[id].title) + "</a>"; });
+    h += "</div>";
+  });
+  return h + "</div>";
+}
+
+function go(hash, push) {
+  var raw = (hash || "").replace(/^#/, "") || "main";
+  var id = raw, sec = null;
+  if (/^text-\d+$/.test(raw)) { id = "saga-text"; sec = raw; }
+  if (raw.indexOf("~") > 0) { id = raw.split("~")[0]; sec = "sec-" + raw.split("~")[1]; }
+  if (id !== "main" && !A[id]) id = "main";
+  page.innerHTML = id === "main" ? renderMain() : renderArticle(A[id]);
+  renderSide(id);
+  document.title = id === "main" ? "Eldermere Wiki" : A[id].title + " · Eldermere Wiki";
+  if (push) { try { history.pushState(null, "", "#" + raw); } catch (e) {} }
+  var target = sec && document.getElementById(sec);
+  if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
+  side.classList.remove("open"); document.getElementById("menu-btn").setAttribute("aria-expanded", "false");
+}
+
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest("a[href^='#']");
+  if (!a) return;
+  e.preventDefault();
+  closeResults();
+  go(a.getAttribute("href"), true);
+});
+window.addEventListener("popstate", function () { go(location.hash, false); });
+document.getElementById("menu-btn").addEventListener("click", function () {
+  var open = side.classList.toggle("open"); this.setAttribute("aria-expanded", open ? "true" : "false");
+});
+
+/* Search */
+var q = document.getElementById("q"), results = document.getElementById("results"), sel = 0, hits = [];
+function textOf(a) { return (a.title + " " + (a.sub || "") + " " + (a.lead || "") + " " + JSON.stringify(a.sections || [])).replace(/<[^>]+>|\[\[|\]\]|\{\{[^}]+\}\}/g, " ").toLowerCase(); }
+function closeResults() { results.hidden = true; }
+function search() {
+  var s = q.value.trim().toLowerCase();
+  if (!s) { closeResults(); return; }
+  hits = ORDER.map(function (id) { var a = A[id], t = a.title.toLowerCase(); var score = t.indexOf(s) === 0 ? 3 : t.indexOf(s) >= 0 ? 2 : textOf(a).indexOf(s) >= 0 ? 1 : 0; return { id: id, score: score }; })
+    .filter(function (h) { return h.score; }).sort(function (x, y) { return y.score - x.score; }).slice(0, 8);
+  sel = 0;
+  results.innerHTML = hits.length ? hits.map(function (h, i) { return '<li><a href="#' + h.id + '"' + (i === 0 ? ' class="sel"' : "") + ">" + esc(A[h.id].title) + "<small>" + esc(A[h.id].cat) + (A[h.id].sub ? " · " + esc(A[h.id].sub) : "") + "</small></a></li>"; }).join("") : '<li><a href="#main">No articles match “' + esc(q.value) + '”<small>Try a place, a person or a faction</small></a></li>';
+  results.hidden = false;
+}
+q.addEventListener("input", search);
+q.addEventListener("keydown", function (e) {
+  var links = results.querySelectorAll("a");
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); if (!links.length) return; links[sel].classList.remove("sel"); sel = (sel + (e.key === "ArrowDown" ? 1 : links.length - 1)) % links.length; links[sel].classList.add("sel"); }
+  if (e.key === "Enter" && hits.length) { e.preventDefault(); go("#" + hits[sel].id, true); q.value = ""; closeResults(); q.blur(); }
+  if (e.key === "Escape") closeResults();
+});
+document.addEventListener("click", function (e) { if (!e.target.closest(".search")) closeResults(); });
+
+go(location.hash, false);
+</script>
