@@ -1,8 +1,9 @@
+<meta charset="utf-8">
 <title>Eldermere</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Alegreya:ital,wght@0,400;0,500;1,400&family=Alegreya+Sans:wght@400;500;700&family=Vazirmatn:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Alegreya:ital,wght@0,400;0,500;1,400&family=Alegreya+Sans:wght@400;500;700&family=Vazirmatn:wght@400;600;700&display=swap">
 <style>
 /* Layout: one night-sky scroll — map hero, then world, ways to play, launcher, join. Single dark look by choice, palette taken from the launcher's Eldermere Dark theme. */
 :root {
@@ -168,28 +169,84 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
   .win-nav { display: none; }
   .ip code { font-size: 1rem; padding: 12px; }
 }
+
+/* Language switch */
+.lang-btn { font: 600 .8rem/1 var(--f-fa); background: transparent; color: var(--ink); border: 1px solid var(--line); padding: 7px 12px; cursor: pointer; }
+.lang-btn:hover { border-color: var(--gold); color: var(--gold); }
+:root[lang="fa"] .lang-btn { font-family: var(--f-sans); }
+
+/* Download */
+.btn-dl { display: inline-flex; align-items: center; gap: 10px; background: var(--tide); color: #F4F6F6; text-decoration: none; font: 600 .95rem/1 var(--f-pixel); letter-spacing: .08em; padding: 15px 20px; box-shadow: 4px 4px 0 rgba(0,0,0,.5), inset 0 -4px 0 #527482; }
+.btn-dl:hover { background: #7499A6; }
+.btn-dl svg { flex: none; }
+.download-band { background: var(--panel); border-block: 1px solid var(--line); }
+.dl-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; list-style: none; margin: 0; padding: 0; }
+.dl-card { display: grid; gap: 10px; align-content: start; padding: 24px; background: var(--night); border: 2px solid var(--line); box-shadow: 6px 6px 0 rgba(0,0,0,.35); }
+.dl-card.mine { border-color: var(--gold); }
+.dl-card h3 { font: 600 1.4rem/1.1 var(--f-pixel); }
+.dl-card .tag { font: 400 .75rem/1 var(--f-pixel); letter-spacing: .12em; text-transform: uppercase; color: var(--gold); min-height: 1em; }
+.dl-card .note { color: var(--muted); font-size: .95rem; }
+.dl-card .btn-dl { justify-self: start; margin-top: 6px; }
+.dl-card:not(.mine) .btn-dl { background: transparent; color: var(--tide-hi); box-shadow: inset 0 0 0 2px var(--tide); }
+.dl-card:not(.mine) .btn-dl:hover { background: rgba(103,143,157,.15); }
+.dl-hint { margin-top: 28px; max-width: 72ch; color: var(--muted); }
+.dl-hint code, .dl-card code { font: 400 .9em/1.4 "SFMono-Regular", Consolas, "Liberation Mono", monospace; color: var(--ink); background: var(--night); border: 1px solid var(--line); padding: 1px 6px; direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+@media (max-width: 860px) { .dl-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Persian: Vazirmatn everywhere (Pixelify and Alegreya have no Arabic script), no tracking or caps since they break joined letters. */
+:root[lang="fa"] { --f-pixel: var(--f-fa); --f-serif: var(--f-fa); --f-sans: var(--f-fa); }
+:root[lang="fa"] body { line-height: 1.85; }
+:root[lang="fa"] *, :root[lang="fa"] *::before, :root[lang="fa"] *::after { letter-spacing: 0 !important; text-transform: none !important; font-style: normal; }
+:root[lang="fa"] .topnav .logo { font-family: "Pixelify Sans", monospace; letter-spacing: .08em !important; }
+:root[lang="fa"] .fa { display: none; }
+:root[lang="fa"] ol { list-style-type: persian; }
+:root[lang="fa"] .hero h1 { line-height: 1.15; }
+:root[lang="fa"] .hero h1 span { font-size: .34em; margin-top: 8px; }
+:root[lang="fa"] .world-text p:first-child::first-letter { font: inherit; float: none; margin: 0; color: inherit; }
+:root[lang="fa"] .steps li::before { content: "گام " counter(s, persian); }
+:root[lang="fa"] .win-cta small { font-size: .8rem; }
+
+/* Right-to-left: mirror the few physical-side rules above. */
+[dir="rtl"] .topnav .logo { margin-right: 0; margin-left: auto; }
+[dir="rtl"] .hero-quote { padding-left: 0; border-left: 0; padding-right: 18px; border-right: 3px solid var(--ember); }
+[dir="rtl"] .hero-map { background-position: 0% 42%; }
+[dir="rtl"] .path + .path { border-left: 0; border-right: 1px solid var(--line); }
+[dir="rtl"] .win-nav { border-right: 0; border-left: 1px solid var(--line); }
+[dir="rtl"] .win-nav .on { box-shadow: inset -3px 0 0 var(--tide); }
+[dir="rtl"] .win-bar span { margin-left: 0; margin-right: 8px; }
+[dir="rtl"] .btn-dl, [dir="rtl"] .dl-card:not(.mine) .btn-dl { box-shadow: -4px 4px 0 rgba(0,0,0,.5), inset 0 -4px 0 #527482; }
+[dir="rtl"] .dl-card:not(.mine) .btn-dl { box-shadow: inset 0 0 0 2px var(--tide); }
+@media (min-width: 861px) {
+  [dir="rtl"] .hero::after { background:
+    linear-gradient(270deg, rgba(12,13,14,.97) 0%, rgba(12,13,14,.9) 34%, rgba(12,13,14,.45) 58%, rgba(12,13,14,.1) 80%, rgba(12,13,14,.3) 100%),
+    linear-gradient(180deg, rgba(12,13,14,.7) 0%, rgba(12,13,14,0) 22%),
+    linear-gradient(0deg, var(--night) 0%, rgba(12,13,14,0) 30%); }
+}
+@media (max-width: 860px) { [dir="rtl"] .path + .path { border-right: 0; } }
 </style>
 
 <header class="hero" id="top">
-  <div class="hero-map" role="img" aria-label="Painted map of the continent of Eldermere"></div>
+  <div class="hero-map" role="img" aria-label="Painted map of the continent of Eldermere" data-i18n-aria-label="heroMap"></div>
   <div class="topnav">
     <div class="wrap">
       <a class="logo" href="#top"><svg width="26" height="26" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="14.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-dasharray="1.2 2.6"/><path d="M20 8.5 31.5 20 20 31.5 8.5 20Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="20" cy="20" r="3.4" fill="currentColor"/></svg>ELDERMERE</a>
-      <nav aria-label="Sections">
-        <a href="#world">World</a><a href="#paths">Paths</a><a href="#modes">Realms</a><a href="#launcher">Launcher</a><a href="#join">Join</a><a class="wiki" href="https://claude.ai/artifact/K3DjjgRhtuQ1izq9wCHZrK">Wiki ↗</a>
+      <nav aria-label="Sections" data-i18n-aria-label="navLabel">
+        <a href="#world" data-i18n="navWorld">World</a><a href="#paths" data-i18n="navPaths">Paths</a><a href="#modes" data-i18n="navRealms">Realms</a><a href="#launcher" data-i18n="navLauncher">Launcher</a><a href="#download" data-i18n="navDownload">Download</a><a href="#join" data-i18n="navJoin">Join</a><a class="wiki" href="wiki.html" data-i18n="navWiki">Wiki ↗</a>
       </nav>
+      <button class="lang-btn" type="button" id="lang-btn"></button>
     </div>
   </div>
   <div class="wrap hero-body">
     <div class="hero-copy">
-      <p class="eyebrow">Saga I · The Age of the Falling Star</p>
-      <h1>ELDERMERE<span>The Continent of Two Paths</span></h1>
-      <blockquote class="hero-quote">“You built your kingdoms upon my prison.”<cite>Vaelthar, the First Darkness</cite></blockquote>
-      <p class="lede">A star has fallen, and the seals beneath Eldermere are breaking. Choose the Warrior's path or the Mage's, and stand against what wakes beneath Blackspire.</p>
+      <p class="eyebrow" data-i18n="heroEyebrow">Saga I · The Age of the Falling Star</p>
+      <h1 data-i18n="heroTitle">ELDERMERE<span>The Continent of Two Paths</span></h1>
+      <blockquote class="hero-quote" data-i18n="heroQuote">“You built your kingdoms upon my prison.”<cite>Vaelthar, the First Darkness</cite></blockquote>
+      <p class="lede" data-i18n="heroLede">A star has fallen, and the seals beneath Eldermere are breaking. Choose the Warrior's path or the Mage's, and stand against what wakes beneath Blackspire.</p>
       <p class="fa" lang="fa">حماسهٔ یکم · عصر ستارهٔ فروافتاده</p>
       <div class="hero-actions">
-        <div class="ip"><code id="ip-hero">sopelcraft.gg</code><button type="button" id="copy-hero" data-target="ip-hero">Copy</button></div>
-        <span class="meta">Java Edition · 1.21.1</span>
+        <a class="btn-dl" id="dl-hero" href="#download"></a>
+        <div class="ip"><code id="ip-hero" dir="ltr">sopelcraft.gg</code><button type="button" id="copy-hero" data-target="ip-hero" data-i18n="copy">Copy</button></div>
+        <span class="meta" data-i18n="heroMeta">Java Edition · 1.21.1</span>
       </div>
     </div>
   </div>
@@ -199,30 +256,30 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
   <section id="world">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">The world</p>
-        <h2>The Age of the Falling Star</h2>
+        <p class="eyebrow" data-i18n="worldEyebrow">The world</p>
+        <h2 data-i18n="worldTitle">The Age of the Falling Star</h2>
       </div>
       <div class="world-grid">
         <div class="world-text">
-          <p>Long before the kingdoms, the Firstborn found the Heart of Creation buried beneath the world. One of them, Vaelthar, wanted to become its master. After centuries of war they sealed him under the continent and erased his name from history.</p>
-          <p>Thousands of years later, a star falls from the sky. The people of Eldermere think it is a natural phenomenon. It is a fragment of the Heart, and the seals are starting to break. The magic of Frostpeak becomes unstable, the forests of Silverwood begin to change, and beneath Blackspire something begins to breathe again.</p>
-          <a class="book-link" href="https://claude.ai/artifact/K3DjjgRhtuQ1izq9wCHZrK">Open the Eldermere Wiki <span>Characters, places and the full saga →</span></a>
+          <p data-i18n="worldP1">Long before the kingdoms, the Firstborn found the Heart of Creation buried beneath the world. One of them, Vaelthar, wanted to become its master. After centuries of war they sealed him under the continent and erased his name from history.</p>
+          <p data-i18n="worldP2">Thousands of years later, a star falls from the sky. The people of Eldermere think it is a natural phenomenon. It is a fragment of the Heart, and the seals are starting to break. The magic of Frostpeak becomes unstable, the forests of Silverwood begin to change, and beneath Blackspire something begins to breathe again.</p>
+          <a class="book-link" href="wiki.html" data-i18n="worldBook">Open the Eldermere Wiki <span>Characters, places and the full saga →</span></a>
         </div>
         <ul class="regions">
-          <li><i class="dot" style="background:var(--gold)"></i><div><b>Kingsreach</b><span>The capital. A Firstborn chamber lies beneath it, and every party gathers here.</span></div></li>
-          <li><i class="dot" style="background:var(--moss)"></i><div><b>Silverwood Forest</b><span>Old woods to the west. Home of Ravenford and the Warriors.</span></div></li>
-          <li><i class="dot" style="background:var(--tide-hi)"></i><div><b>Frostpeak Mountains</b><span>Snow and stone in the north. Home of Wintermere and the Mages.</span></div></li>
-          <li><i class="dot" style="background:var(--ember)"></i><div><b>Blackspire</b><span>The ancient prison at the center of the seals. Something breathes beneath it.</span></div></li>
-          <li><i class="dot" style="background:#C98E5A"></i><div><b>The Crimson Expanse</b><span>Eastern deserts where the old ruins are waking.</span></div></li>
+          <li><i class="dot" style="background:var(--gold)"></i><div data-i18n="rKingsreach"><b>Kingsreach</b><span>The capital. A Firstborn chamber lies beneath it, and every party gathers here.</span></div></li>
+          <li><i class="dot" style="background:var(--moss)"></i><div data-i18n="rSilverwood"><b>Silverwood Forest</b><span>Old woods to the west. Home of Ravenford and the Warriors.</span></div></li>
+          <li><i class="dot" style="background:var(--tide-hi)"></i><div data-i18n="rFrostpeak"><b>Frostpeak Mountains</b><span>Snow and stone in the north. Home of Wintermere and the Mages.</span></div></li>
+          <li><i class="dot" style="background:var(--ember)"></i><div data-i18n="rBlackspire"><b>Blackspire</b><span>The ancient prison at the center of the seals. Something breathes beneath it.</span></div></li>
+          <li><i class="dot" style="background:#C98E5A"></i><div data-i18n="rCrimson"><b>The Crimson Expanse</b><span>Eastern deserts where the old ruins are waking.</span></div></li>
         </ul>
       </div>
 
-      <p class="eyebrow faction-label">Four powers shape the realm</p>
+      <p class="eyebrow faction-label" data-i18n="factionsLabel">Four powers shape the realm</p>
       <div class="factions">
-        <div class="faction" style="--fc:var(--gold)"><h3>The Firstborn</h3><p class="vows">Creation · Knowledge · Balance</p><p>The ancient civilization that built the seals and then vanished. Their symbol still marks the ruins.</p></div>
-        <div class="faction" style="--fc:var(--ember)"><h3>The Iron Wolves</h3><p class="vows">Strength · War · Survival</p><p>Silverwood warriors led by Darius Veyne, the Black Wolf. “Peace creates weakness. War creates strength.”</p></div>
-        <div class="faction" style="--fc:var(--violet)"><h3>The Veiled Circle</h3><p class="vows">Magic · Freedom · Evolution</p><p>Forbidden mages of Frostpeak led by Seraphine Voss, the Frost Witch, who embraced the Star's power.</p></div>
-        <div class="faction" style="--fc:var(--tide-hi)"><h3>Vaelthar</h3><p class="vows">Dominion · Unity · Eternal</p><p>The First Darkness, sealed beneath Blackspire. He offers power and peace to anyone who will kneel.</p></div>
+        <div class="faction" style="--fc:var(--gold)" data-i18n="fFirstborn"><h3>The Firstborn</h3><p class="vows">Creation · Knowledge · Balance</p><p>The ancient civilization that built the seals and then vanished. Their symbol still marks the ruins.</p></div>
+        <div class="faction" style="--fc:var(--ember)" data-i18n="fWolves"><h3>The Iron Wolves</h3><p class="vows">Strength · War · Survival</p><p>Silverwood warriors led by Darius Veyne, the Black Wolf. “Peace creates weakness. War creates strength.”</p></div>
+        <div class="faction" style="--fc:var(--violet)" data-i18n="fCircle"><h3>The Veiled Circle</h3><p class="vows">Magic · Freedom · Evolution</p><p>Forbidden mages of Frostpeak led by Seraphine Voss, the Frost Witch, who embraced the Star's power.</p></div>
+        <div class="faction" style="--fc:var(--tide-hi)" data-i18n="fVaelthar"><h3>Vaelthar</h3><p class="vows">Dominion · Unity · Eternal</p><p>The First Darkness, sealed beneath Blackspire. He offers power and peace to anyone who will kneel.</p></div>
       </div>
     </div>
   </section>
@@ -230,23 +287,23 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
   <section id="paths" class="paths-band">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">Two paths</p>
-        <h2>Warrior or Mage</h2>
-        <p>For generations the forest and the mountain have kept their distance. The Falling Star is about to change that.</p>
+        <p class="eyebrow" data-i18n="pathsEyebrow">Two paths</p>
+        <h2 data-i18n="pathsTitle">Warrior or Mage</h2>
+        <p data-i18n="pathsLede">For generations the forest and the mountain have kept their distance. The Falling Star is about to change that.</p>
       </div>
       <div class="paths">
         <article class="path" style="--pc:var(--moss)">
-          <p class="tag">From Ravenford</p>
-          <h3>Warrior of Silverwood</h3>
-          <p class="creed">“Strength exists to protect others.”</p>
-          <p>Warriors distrust excessive magic. Your road runs through the changing forests, where Darius Veyne, the Black Wolf, gathers the Iron Wolves.</p>
+          <p class="tag" data-i18n="warTag">From Ravenford</p>
+          <h3 data-i18n="warTitle">Warrior of Silverwood</h3>
+          <p class="creed" data-i18n="warCreed">“Strength exists to protect others.”</p>
+          <p data-i18n="warText">Warriors distrust excessive magic. Your road runs through the changing forests, where Darius Veyne, the Black Wolf, gathers the Iron Wolves.</p>
           <p class="fa" lang="fa">جنگجوی سیلور‌وود</p>
         </article>
         <article class="path" style="--pc:var(--tide-hi)">
-          <p class="tag">From Wintermere</p>
-          <h3>Mage of Frostpeak</h3>
-          <p class="creed">“Knowledge exists to understand the unknown.”</p>
-          <p>Mages think Warriors impulsive. Your road climbs into mountains where magic is growing unstable, and Seraphine Voss, the Frost Witch, leads the Veiled Circle.</p>
+          <p class="tag" data-i18n="mageTag">From Wintermere</p>
+          <h3 data-i18n="mageTitle">Mage of Frostpeak</h3>
+          <p class="creed" data-i18n="mageCreed">“Knowledge exists to understand the unknown.”</p>
+          <p data-i18n="mageText">Mages think Warriors impulsive. Your road climbs into mountains where magic is growing unstable, and Seraphine Voss, the Frost Witch, leads the Veiled Circle.</p>
           <p class="fa" lang="fa">جادوگر فراست‌پیک</p>
         </article>
       </div>
@@ -256,30 +313,30 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
   <section id="modes" class="modes-band">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">Ways to play</p>
-        <h2>Choose your realm</h2>
-        <p>One world, three ways into it. Switch between them from the launcher whenever you like.</p>
+        <p class="eyebrow" data-i18n="modesEyebrow">Ways to play</p>
+        <h2 data-i18n="modesTitle">Choose your realm</h2>
+        <p data-i18n="modesLede">One world, three ways into it. Switch between them from the launcher whenever you like.</p>
       </div>
       <div class="modes">
         <article class="mode">
           <img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAgJJREFUeF7tmM1pw0AUhF2EICFFLARchnAHPimFuBoXE3L12Y0YnMs7PH3MSjheOYozA99J7JufQyDeWJZlWZZltdJ2u70uSdisVyp0S8JmvVKhWxI265UK3ZKw+T2pUJnj8TjJ4XAYsd/vR8x9V56ZiLmclGlGlc7MFZz7rjwzEXM5KdOMKp2ZKzj3XXlmIuZyUqYZVTozV3Duu/LMRMx2en15uWYYiIEZqJRyF7xHf8K8UePn4kEaegAP8GQD8AANGEiFfiTMw7zsEzXr4gMepKEK9UiYh3nZJ2rWxQc8SEMV6pEwD/OyT9Ssiw94kIYq1CNhHuZln6hZFx/QQIW4h6EMn5nSlfebeCsfGeZln6hZFx/woCpxDx7AAzz5ALvSnzPDMFwzl64b89Z9jSjd+y0wL/tEzbr4gAdVySk8gAf44wPwBw0aqNIjhvI5oi/nDAeSNyZgHv5zxj5Rsy4+8AAe4J8PwIOXy2USFbIlzEN2fT+CfaJmXXxAA1U6o0K3hHmIB/AACw9wOp0mUaNk+EdV3cjQnz94sDBhn6hZFx8wgAqZUaUzHsADrHwAigduLUBYiPcIC5PmhSkeZEBVcgoP4AH+2AAUDQgLtB5AeWYi5nJSphkW8AAe4MkGmJMK1ZKwWa9U6JaEzXqlQrckbNYrFbolYWNZlmVZlnWnNptvR0uUwRYH6BUAAAAASUVORK5CYII=" alt="">
-          <p class="tag">Explore · Quest · Build</p>
-          <h3>Survival RPG</h3>
-          <p>Walk the Warrior's or the Mage's path while the seals fail. Follow the ancient Firstborn symbol, take daily quests, and earn your name in Kingsreach.</p>
+          <p class="tag" data-i18n="m1Tag">Explore · Quest · Build</p>
+          <h3 data-i18n="m1Title">Survival RPG</h3>
+          <p data-i18n="m1Text">Walk the Warrior's or the Mage's path while the seals fail. Follow the ancient Firstborn symbol, take daily quests, and earn your name in Kingsreach.</p>
           <p class="fa" lang="fa">بقا و نقش‌آفرینی</p>
         </article>
         <article class="mode">
           <img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAltJREFUeF7tmLFtW0EQRNmBinAhlgM3IbgVJxLchhNDRSh2AU6dO1DAWIDgRE4mWD7M5+KMo/a+tANMxLudNxscSB5arVZrpr7ffHi5pBWzrhz0TCtmXTnomVbMunLQM62YdUTAx9+3FzXzhFEnAjnomWaeMOpEIAc908wTRp0I5KBnmnnCqNPdx6uXaAL/fT6e9dPxx1lzHvOEUScCEdiVjnalozmPecKoE4EI7EpHu9LRnMc8YdSJQAR2paNd6WjOY54w6kSgX/dfzjor6O5EM08YdSKQg47uBfQC3vgC+Mhd//l6YlcqOrvPPGHUiUBZAVc6OrvPPGHUiUBZAVc6OrvPPGHUiUBZAVc6OrvPPGHUiUAEPjx8PjEL8lHM7jNPGHUiUFagF9ALeOML+Pnt04n5yLFw9kWI85gnjDoRiMAs1AvoBSy+AP7pOGoCsgAL0zzPeS5zxKq5LXdpxARmIVc6muc5z2WOWDW35S6NmMAs5EpH8zznucwRq+a23KURE5iFXOlonuc8lzli1dwWLxCQjxQBs/MsSGfnmcfPeZ/nVXNbvYBewDtfAMUBNBfGLzrZjx8ujGYh5jmmaNX4f7mh0QRiwV5AL2DnC8hEoKzAqPnIvXrBTL2AXsA7XwCBuJDZZp4w6kQgBz3TzBNGnQjkoGeaecKoE4Ec9EwzTxjriIDZo5aZ8xSzrgjcC+gF9AKGFsDznKeYdUVgFnKlo3me8xSzrgjMQq50NM9znmLWFYFZyJWO5nnOU8x+xAKj1pj9ypUascbsV67UiDVmv3KlRqwxF9Lh8A+9QuHe4KR+IgAAAABJRU5ErkJggg==" alt="">
-          <p class="tag">Raids · Hardcore</p>
-          <h3>Dungeons</h3>
-          <p>Descend into the awakened Firstborn ruins and on toward the Prison beneath Blackspire. Gather your party at Kingsreach first. Mistakes are punished.</p>
+          <p class="tag" data-i18n="m2Tag">Raids · Hardcore</p>
+          <h3 data-i18n="m2Title">Dungeons</h3>
+          <p data-i18n="m2Text">Descend into the awakened Firstborn ruins and on toward the Prison beneath Blackspire. Gather your party at Kingsreach first. Mistakes are punished.</p>
           <p class="fa" lang="fa">سیاه‌چال و هاردکور</p>
         </article>
         <article class="mode">
           <img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAWZJREFUeF7tlzFqQkEURX8pCHa2H5sgpBRsU6excwUpdAduIVlHSveRIjtJkw2k0eYhzmGY7y80M+/dC7eauTrnFIKdt8xe1qcxtZmf5CBLtZmf5CBLtZmf5CBLtVm7IdDn32+xk6dFUvuYdiMBEhBMwBDw89cxKc8lQAIkoC0B4YAZCZCAYALGAq9+vpM2B8xIgAQEExAOmJEACahcAB/I2rWbwz2B/h2Y4YNZu3ZzuCegBEhA5QLmb9ukPLfZJTwnUHXADAEkQAKCCWAI1H8ckvLBBOJ9nnNvX1tPJEACJKAogOWPZnPAjARIQHABDIUQmOfNAzMElAAJcC7gdT0/XXe/6ZMSkAJY3revqTcSIAHBBBD4fbdMuuynSW12CQHZ6oVIgAQ4F8AHsPyRGwIeGwKzdu1+yUFfVwIkIJgA/pl5+IMeHQmQgOACCDhUm/lJDrJUm/lJDrJUm/lJDrJUmzlJ150BOokVx1VIreoAAAAASUVORK5CYII=" alt="">
-          <p class="tag">Clans · Territory · War</p>
-          <h3>Clan Wars</h3>
-          <p>Eldermere is falling into chaos. Found a clan, fill its treasury, and fight other clans for territory across the continent.</p>
+          <p class="tag" data-i18n="m3Tag">Clans · Territory · War</p>
+          <h3 data-i18n="m3Title">Clan Wars</h3>
+          <p data-i18n="m3Text">Eldermere is falling into chaos. Found a clan, fill its treasury, and fight other clans for territory across the continent.</p>
           <p class="fa" lang="fa">جنگ کلن‌ها</p>
         </article>
       </div>
@@ -289,52 +346,64 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
   <section id="launcher">
     <div class="wrap">
       <div class="launcher-grid">
-        <div class="window" aria-label="Preview of the Eldermere launcher">
+        <div class="window" aria-label="Preview of the Eldermere launcher" data-i18n-aria-label="winLabel">
           <div class="win-bar"><i></i><i></i><i></i><span>ELDERMERE</span></div>
           <div class="win-body">
-            <nav class="win-nav" aria-hidden="true">
+            <nav class="win-nav" aria-hidden="true" data-i18n="winNav">
               <div class="on">Home</div><div>World map</div><div>Clans</div><div>Voice</div><div>Quests</div><div>Shop</div><div>News</div><div>Settings</div>
             </nav>
             <div class="win-main">
               <div class="win-cta">
-                <small>SAGA I · THE AGE OF THE FALLING STAR</small>
-                <strong>The seals are failing</strong>
-                <span class="win-play">PLAY</span>
+                <small data-i18n="winSaga">SAGA I · THE AGE OF THE FALLING STAR</small>
+                <strong data-i18n="winTitle">The seals are failing</strong>
+                <span class="win-play" data-i18n="winPlay">PLAY</span>
               </div>
             </div>
           </div>
         </div>
         <div>
           <div class="sec-head" style="margin-bottom:32px">
-            <p class="eyebrow">The launcher</p>
-            <h2>Built for this world</h2>
-            <p>Eldermere has its own desktop launcher. It is written in Rust and made by the people who run the server.</p>
+            <p class="eyebrow" data-i18n="launcherEyebrow">The launcher</p>
+            <h2 data-i18n="launcherTitle">Built for this world</h2>
+            <p data-i18n="launcherLede">Eldermere has its own desktop launcher. It is written in Rust and made by the people who run the server.</p>
           </div>
           <ul class="features">
-            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAbFJREFUeF7t1jFKZFEUhOHekPlkRiLMFkyMXYCJmaAwgctQDAxNjIxcg+AGDI2NnOQE935c+mGj0t6uHyp6p8+pqgePXoUQQgghbAvXN4cf61Rj8zIK3arG5mUUulWNzcsodKsamwcDvr4+dXp+ue3kfK35vRgoBaSAyQrQsDrY3+v0/v62Vhbkvjq7PWhQpYAUMFkBGtKwgSxAOa/8SF5c/ulUtn6OFJACJi/AgEpDV//OOh0f/e1k4Pv7u06j0Oukny8vxAMqBaSAyQpwoYb9yBnAeZ8b4LPzyheg/08X4gINpoAUMFkB/sCFGlR+5PwIjky3Wto3+k0rX8hiYEkBKWDHCxAXWIgHDaBBnyvnlff0o9+KsTku9KCGlgL5XDmvvKcf/VaMzXGhBzW0FMjnynnlPf3ot2Jsjgs9qKGlQD5Xzivv6Ue/FePr8IAGLs9POvkR84/NUgEG9r4qm9+HB1NACtixAkQDFmKApYAPj6ed3F9ntwcNpoAUsGMFiIYtZCmgqrW/BwOkgBSwYwXIKFSrGpuXUehWNTYvo9CtamxeRqFb1VgIIYQQwg+zWv0HUCRzwGTLhyAAAAAASUVORK5CYII=" alt=""><div><b>World map and realm news</b><span>See the whole continent and read dispatches as the saga unfolds, from the Falling Star to what stirs beneath Blackspire.</span></div></li>
-            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAW9JREFUeF7tlz1KxUAURrMCKxEsxUIsFQs7a5u3AAsrN2Jta+UybN2BleAqbLV8D57NLZLjJcM8MRnJ+eBUydyfExhIZ4wxY7m9ON72ub+5HsDn5Opof5TszBil83wea+weNlCAAhYmgAVLDc8P96rg+RKl83wea+weNlCAAhYmoDbPd6fbPm+PZ7+C9aJNu+HA2VI1sF60aTccOFuqBtaLNu2GA2dL1cB60aadcMDP15MB6/fLAZuP1Sh8n0KeVgcDYoz5ogAFLFwAB+QCP5b8ehjC54D1FKAABfwzAVyYJEv3YT0FKEABClCAAhTQjgD+DHHgdOk+ydJ9WE8BClBAWwJ4CXLB9eZlFL5fQgEKUEBbAngJUggvsVpYTwEKUMC8AjgQL6nsoquB9UrwA8SYfxcFKGDhAtiQl1bpZ6YEzxN+gMkvRQUoYOECGA4wNTHGfMmGmpIYY75kQ01JjDFfsqGmJMYwxhhjjKlM130DBBhkT3M4B/oAAAAASUVORK5CYII=" alt=""><div><b>Clans, friends and voice</b><span>Form a party, send invites, and talk to your clan without leaving the launcher.</span></div></li>
-            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAT9JREFUeF7tmMFJA0EYRqcLLUFIirAGO7ANT2ILNiFIKrGBkAo8Ct5E0IX5DzPf/AR+NpPNZN+Dd9pld753WEgSAAAAQDce0t8sh8cbFXF4vFERh8cbFXE4ZMD+97Py/uvlqDeHx0p9nr3lgpEDE4AA1x5ADqiDdz8fld7o0vS2qWyCbKf3lC4OAfJwAqwmQHCw6o0u1QDq8kEIkIcTgABZHagHVPV+tRn9eler1wlgwwlgdocAefipAjx/v1c2A59ua/U6AWw4AczuECAPJwABsjrIG12q9xNgbQF0sNoMlAD6PAIQwIYTwOzOiQM0f4jIYP0xpM8jAAFsOAHMsyNBmo+YDGgGqnK/Blt+sEKA6RAEKFxdAGVmkMv7yEUhwHRIAhSuLoCiA6IOjzcq4vB4oyIOjzcqIgAAAEAXUvoHmDu3xbt+yxEAAAAASUVORK5CYII=" alt=""><div><b>Quests, relics and the market</b><span>Track story and daily quests, keep your login streak for Firstborn relics, and visit the Kingsreach market.</span></div></li>
-            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAXpJREFUeF7tmDFOxDAQRdNTQUNHh0CUW0HDIRBouy0QCHEIrrDiBJRcIkdBHII+UmimGD+NsLYhsed/6VWeOP6vsLI7KIqirDlf7zezZ3y9+BN7rJ9IgAQkE8DCZ0/PBZv9vuBlHAuaFyIBEpBMwMfD8ez5+X4sqBWepqmA66sXIgESkEwAC/PSo4BDL0HC/e0Yy0UCJCCZgEML19ZrQrjO/exY/xcJkIDkAt5ur2cPC/FDhusswHXCeTvGcpEACUgmgIU/d9uC6NAeFuCPGXJ3dVRgx1guEiAByQTUChPON1eYYaGotIfzEiABjQu4vzyfPbXCnCeb05OC1RVmWEACJKBzATwQ//Bggaikh/P2mvVGAiQgmQAWjj5OPDUhxF6z3kiABCQTwML8kKkV5vO2bTthAQmQgGQCeElRAOG8bdNuWCgq7eG8bdNuWCgq7eG8bdNuWCgq7eG8bdNPWJDYWL+JSntsrN9EpT021m+i0h4bUxRFaTDD8At/BRDFMz1ubQAAAABJRU5ErkJggg==" alt=""><div><b>English and Persian</b><span>Use the launcher in English or Persian, with full right-to-left layout, in light or dark mode.</span></div></li>
+            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAbFJREFUeF7t1jFKZFEUhOHekPlkRiLMFkyMXYCJmaAwgctQDAxNjIxcg+AGDI2NnOQE935c+mGj0t6uHyp6p8+pqgePXoUQQgghbAvXN4cf61Rj8zIK3arG5mUUulWNzcsodKsamwcDvr4+dXp+ue3kfK35vRgoBaSAyQrQsDrY3+v0/v62Vhbkvjq7PWhQpYAUMFkBGtKwgSxAOa/8SF5c/ulUtn6OFJACJi/AgEpDV//OOh0f/e1k4Pv7u06j0Oukny8vxAMqBaSAyQpwoYb9yBnAeZ8b4LPzyheg/08X4gINpoAUMFkB/sCFGlR+5PwIjky3Wto3+k0rX8hiYEkBKWDHCxAXWIgHDaBBnyvnlff0o9+KsTku9KCGlgL5XDmvvKcf/VaMzXGhBzW0FMjnynnlPf3ot2Jsjgs9qKGlQD5Xzivv6Ue/FePr8IAGLs9POvkR84/NUgEG9r4qm9+HB1NACtixAkQDFmKApYAPj6ed3F9ntwcNpoAUsGMFiIYtZCmgqrW/BwOkgBSwYwXIKFSrGpuXUehWNTYvo9CtamxeRqFb1VgIIYQQwg+zWv0HUCRzwGTLhyAAAAAASUVORK5CYII=" alt=""><div data-i18n="feat1"><b>World map and realm news</b><span>See the whole continent and read dispatches as the saga unfolds, from the Falling Star to what stirs beneath Blackspire.</span></div></li>
+            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAW9JREFUeF7tlz1KxUAURrMCKxEsxUIsFQs7a5u3AAsrN2Jta+UybN2BleAqbLV8D57NLZLjJcM8MRnJ+eBUydyfExhIZ4wxY7m9ON72ub+5HsDn5Opof5TszBil83wea+weNlCAAhYmgAVLDc8P96rg+RKl83wea+weNlCAAhYmoDbPd6fbPm+PZ7+C9aJNu+HA2VI1sF60aTccOFuqBtaLNu2GA2dL1cB60aadcMDP15MB6/fLAZuP1Sh8n0KeVgcDYoz5ogAFLFwAB+QCP5b8ehjC54D1FKAABfwzAVyYJEv3YT0FKEABClCAAhTQjgD+DHHgdOk+ydJ9WE8BClBAWwJ4CXLB9eZlFL5fQgEKUEBbAngJUggvsVpYTwEKUMC8AjgQL6nsoquB9UrwA8SYfxcFKGDhAtiQl1bpZ6YEzxN+gMkvRQUoYOECGA4wNTHGfMmGmpIYY75kQ01JjDFfsqGmJMYwxhhjjKlM130DBBhkT3M4B/oAAAAASUVORK5CYII=" alt=""><div data-i18n="feat2"><b>Clans, friends and voice</b><span>Form a party, send invites, and talk to your clan without leaving the launcher.</span></div></li>
+            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAT9JREFUeF7tmMFJA0EYRqcLLUFIirAGO7ANT2ILNiFIKrGBkAo8Ct5E0IX5DzPf/AR+NpPNZN+Dd9pld753WEgSAAAAQDce0t8sh8cbFXF4vFERh8cbFXE4ZMD+97Py/uvlqDeHx0p9nr3lgpEDE4AA1x5ADqiDdz8fld7o0vS2qWyCbKf3lC4OAfJwAqwmQHCw6o0u1QDq8kEIkIcTgABZHagHVPV+tRn9eler1wlgwwlgdocAefipAjx/v1c2A59ua/U6AWw4AczuECAPJwABsjrIG12q9xNgbQF0sNoMlAD6PAIQwIYTwOzOiQM0f4jIYP0xpM8jAAFsOAHMsyNBmo+YDGgGqnK/Blt+sEKA6RAEKFxdAGVmkMv7yEUhwHRIAhSuLoCiA6IOjzcq4vB4oyIOjzcqIgAAAEAXUvoHmDu3xbt+yxEAAAAASUVORK5CYII=" alt=""><div data-i18n="feat3"><b>Quests, relics and the market</b><span>Track story and daily quests, keep your login streak for Firstborn relics, and visit the Kingsreach market.</span></div></li>
+            <li><img class="pixel" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAAXpJREFUeF7tmDFOxDAQRdNTQUNHh0CUW0HDIRBouy0QCHEIrrDiBJRcIkdBHII+UmimGD+NsLYhsed/6VWeOP6vsLI7KIqirDlf7zezZ3y9+BN7rJ9IgAQkE8DCZ0/PBZv9vuBlHAuaFyIBEpBMwMfD8ez5+X4sqBWepqmA66sXIgESkEwAC/PSo4BDL0HC/e0Yy0UCJCCZgEML19ZrQrjO/exY/xcJkIDkAt5ur2cPC/FDhusswHXCeTvGcpEACUgmgIU/d9uC6NAeFuCPGXJ3dVRgx1guEiAByQTUChPON1eYYaGotIfzEiABjQu4vzyfPbXCnCeb05OC1RVmWEACJKBzATwQ//Bggaikh/P2mvVGAiQgmQAWjj5OPDUhxF6z3kiABCQTwML8kKkV5vO2bTthAQmQgGQCeElRAOG8bdNuWCgq7eG8bdNuWCgq7eG8bdNuWCgq7eG8bdNPWJDYWL+JSntsrN9EpT021m+i0h4bUxRFaTDD8At/BRDFMz1ubQAAAABJRU5ErkJggg==" alt=""><div data-i18n="feat4"><b>English and Persian</b><span>Use the launcher in English or Persian, with full right-to-left layout, in light or dark mode.</span></div></li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
+  <section id="download" class="download-band">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" data-i18n="dlEyebrow">Download</p>
+        <h2 data-i18n="dlTitle">Get the launcher</h2>
+        <p id="dl-lede"></p>
+      </div>
+      <ul class="dl-grid" id="dl-grid"></ul>
+      <p class="dl-hint" id="dl-hint"></p>
+    </div>
+  </section>
+
   <section id="join" class="join">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">Join us</p>
-        <h2>Your friends are already exploring</h2>
+        <p class="eyebrow" data-i18n="joinEyebrow">Join us</p>
+        <h2 data-i18n="joinTitle">Your friends are already exploring</h2>
       </div>
       <ol class="steps">
-        <li><b>Get the launcher</b><span>Install the Eldermere launcher on your computer.</span></li>
-        <li><b>Create your profile</b><span>Sign in or register with your email to connect your Eldermere player profile.</span></li>
-        <li><b>Choose your path</b><span>Become a Warrior of Silverwood or a Mage of Frostpeak, pick a realm, and press Play.</span></li>
+        <li data-i18n="step1"><b>Get the launcher</b><span><a href="#download">Download</a> and install the Eldermere launcher on your computer.</span></li>
+        <li data-i18n="step2"><b>Create your profile</b><span>Sign in or register with your email to connect your Eldermere player profile.</span></li>
+        <li data-i18n="step3"><b>Choose your path</b><span>Become a Warrior of Silverwood or a Mage of Frostpeak, pick a realm, and press Play.</span></li>
       </ol>
       <div class="join-row">
-        <div class="ip"><code id="ip-join">sopelcraft.gg</code><button type="button" id="copy-join" data-target="ip-join">Copy</button></div>
-        <span class="meta">Minecraft Java Edition 1.21.1 · 8 GB of memory recommended</span>
+        <div class="ip"><code id="ip-join" dir="ltr">sopelcraft.gg</code><button type="button" id="copy-join" data-target="ip-join" data-i18n="copy">Copy</button></div>
+        <span class="meta" data-i18n="joinMeta">Minecraft Java Edition 1.21.1 · 8 GB of memory recommended</span>
       </div>
     </div>
   </section>
@@ -342,16 +411,168 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
 
 <footer>
   <div class="wrap">
-    <span>Eldermere · sopelcraft.gg · <a href="https://claude.ai/artifact/K3DjjgRhtuQ1izq9wCHZrK">Wiki</a></span>
-    <span>Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.</span>
+    <span data-i18n="footBrand">Eldermere · sopelcraft.gg · <a href="wiki.html">Wiki</a></span>
+    <span data-i18n="footLegal">Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.</span>
   </div>
 </footer>
 
 <script>
+/* Release builds found in release/ at build time: [{os, file, size}]. */
+var RELEASES = [{"os": "mac", "file": "eldermere-launcher-apple", "size": 32945328}, {"os": "linux", "file": "eldermere-launcher-linux", "size": 66022824}, {"os": "windows", "file": "eldermere-launcher.exe", "size": 33372160}];
+var DOWNLOAD_BASE = "release/";
+
+/* English lives in the markup; this is the Persian for every [data-i18n] key, plus strings the script builds. */
+var FA = {
+  title: "الدرمیر",
+  heroMap: "نقشهٔ نقاشی‌شدهٔ قارهٔ الدرمیر",
+  navLabel: "بخش‌ها",
+  navWorld: "جهان", navPaths: "دو راه", navRealms: "قلمروها", navLauncher: "لانچر", navDownload: "دانلود", navJoin: "پیوستن", navWiki: "ویکی ↗",
+  heroEyebrow: "حماسهٔ یکم · عصر ستارهٔ فروافتاده",
+  heroTitle: "الدرمیر<span>قارهٔ دو راه</span>",
+  heroQuote: "«پادشاهی‌هایتان را بر زندان من بنا کردید.»<cite>ویلتار، نخستین تاریکی</cite>",
+  heroLede: "ستاره‌ای فرو افتاده و مُهرهای زیر الدرمیر در حال شکستن‌اند. راه جنگجو یا جادوگر را برگزین و در برابر آنچه زیر بلک‌اسپایر بیدار می‌شود بایست.",
+  heroMeta: "نسخهٔ جاوا · ۱.۲۱.۱",
+  copy: "کپی", copied: "کپی شد",
+  worldEyebrow: "جهان",
+  worldTitle: "عصر ستارهٔ فروافتاده",
+  worldP1: "مدت‌ها پیش از پادشاهی‌ها، نخست‌زادگان قلب آفرینش را در اعماق جهان یافتند. یکی از آنان، ویلتار، می‌خواست ارباب آن شود. پس از قرن‌ها جنگ، او را زیر قاره به بند کشیدند و نامش را از تاریخ پاک کردند.",
+  worldP2: "هزاران سال بعد، ستاره‌ای از آسمان فرو می‌افتد. مردم الدرمیر آن را پدیده‌ای طبیعی می‌پندارند، اما تکه‌ای از قلب است و مُهرها رو به شکستن‌اند. جادوی فراست‌پیک ناپایدار می‌شود، جنگل‌های سیلور‌وود دگرگون می‌شوند و زیر بلک‌اسپایر چیزی دوباره نفس می‌کشد.",
+  worldBook: "ویکی الدرمیر را باز کنید <span>شخصیت‌ها، مکان‌ها و حماسهٔ کامل ←</span>",
+  rKingsreach: "<b>کینگزریچ</b><span>پایتخت. تالاری از نخست‌زادگان زیر آن نهفته است و همهٔ گروه‌ها اینجا گرد هم می‌آیند.</span>",
+  rSilverwood: "<b>جنگل سیلور‌وود</b><span>جنگل‌های کهن غرب. سرزمین ریونفورد و جنگجویان.</span>",
+  rFrostpeak: "<b>کوهستان فراست‌پیک</b><span>برف و سنگ در شمال. سرزمین وینترمیر و جادوگران.</span>",
+  rBlackspire: "<b>بلک‌اسپایر</b><span>زندان باستانی در مرکز مُهرها. چیزی زیر آن نفس می‌کشد.</span>",
+  rCrimson: "<b>دشت سرخ</b><span>بیابان‌های شرقی، جایی که ویرانه‌های کهن بیدار می‌شوند.</span>",
+  factionsLabel: "چهار قدرت این سرزمین را شکل می‌دهند",
+  fFirstborn: "<h3>نخست‌زادگان</h3><p class=\"vows\">آفرینش · دانش · توازن</p><p>تمدن باستانی که مُهرها را ساخت و سپس ناپدید شد. نشانشان هنوز بر ویرانه‌ها نقش بسته است.</p>",
+  fWolves: "<h3>گرگ‌های آهنین</h3><p class=\"vows\">قدرت · جنگ · بقا</p><p>جنگجویان سیلور‌وود به رهبری داریوس وین، گرگ سیاه. «صلح ضعف می‌آفریند. جنگ قدرت می‌آفریند.»</p>",
+  fCircle: "<h3>حلقهٔ نقاب‌دار</h3><p class=\"vows\">جادو · آزادی · تکامل</p><p>جادوگران ممنوعهٔ فراست‌پیک به رهبری سرافین واس، ساحرهٔ یخ، که نیروی ستاره را در آغوش کشید.</p>",
+  fVaelthar: "<h3>ویلتار</h3><p class=\"vows\">سلطه · یگانگی · جاودانگی</p><p>نخستین تاریکی، دربند زیر بلک‌اسپایر. به هر که زانو بزند قدرت و آرامش وعده می‌دهد.</p>",
+  pathsEyebrow: "دو راه",
+  pathsTitle: "جنگجو یا جادوگر",
+  pathsLede: "نسل‌هاست که جنگل و کوهستان از هم فاصله گرفته‌اند. ستارهٔ فروافتاده این را دگرگون خواهد کرد.",
+  warTag: "از ریونفورد", warTitle: "جنگجوی سیلور‌وود", warCreed: "«قدرت برای پاسداری از دیگران است.»",
+  warText: "جنگجویان به جادوی بی‌اندازه بدگمان‌اند. راه تو از میان جنگل‌های دگرگون‌شونده می‌گذرد، جایی که داریوس وین، گرگ سیاه، گرگ‌های آهنین را گرد می‌آورد.",
+  mageTag: "از وینترمیر", mageTitle: "جادوگر فراست‌پیک", mageCreed: "«دانش برای فهم ناشناخته‌هاست.»",
+  mageText: "جادوگران جنگجویان را شتاب‌زده می‌دانند. راه تو به کوهستانی می‌رسد که جادویش ناپایدار شده و سرافین واس، ساحرهٔ یخ، حلقهٔ نقاب‌دار را رهبری می‌کند.",
+  modesEyebrow: "شیوه‌های بازی",
+  modesTitle: "قلمروت را برگزین",
+  modesLede: "یک جهان و سه راه برای ورود به آن. هر وقت خواستی از درون لانچر میانشان جابه‌جا شو.",
+  m1Tag: "کاوش · ماموریت · ساخت", m1Title: "بقا و نقش‌آفرینی",
+  m1Text: "در حالی که مُهرها فرو می‌ریزند، راه جنگجو یا جادوگر را بپیما. نشان کهن نخست‌زادگان را دنبال کن، ماموریت‌های روزانه بگیر و در کینگزریچ برای خود نامی بساز.",
+  m2Tag: "یورش · هاردکور", m2Title: "سیاه‌چال‌ها",
+  m2Text: "به ویرانه‌های بیدارشدهٔ نخست‌زادگان فرود بیا و تا زندان زیر بلک‌اسپایر پیش برو. نخست گروهت را در کینگزریچ گرد آور. خطا بی‌کیفر نمی‌ماند.",
+  m3Tag: "کلن · قلمرو · جنگ", m3Title: "جنگ کلن‌ها",
+  m3Text: "الدرمیر در آشوب فرو می‌رود. کلنی بنیان بگذار، خزانه‌اش را پر کن و برای قلمرو در سراسر قاره با کلن‌های دیگر بجنگ.",
+  winLabel: "پیش‌نمایش لانچر الدرمیر",
+  winNav: "<div class=\"on\">خانه</div><div>نقشهٔ جهان</div><div>کلن‌ها</div><div>صدا</div><div>ماموریت‌ها</div><div>فروشگاه</div><div>اخبار</div><div>تنظیمات</div>",
+  winSaga: "حماسهٔ یکم · عصر ستارهٔ فروافتاده", winTitle: "مُهرها در حال شکستن‌اند", winPlay: "بازی",
+  launcherEyebrow: "لانچر",
+  launcherTitle: "ساخته‌شده برای این جهان",
+  launcherLede: "الدرمیر لانچر دسکتاپ خودش را دارد؛ نوشته‌شده با Rust و ساختهٔ همان کسانی که سرور را می‌گردانند.",
+  feat1: "<b>نقشهٔ جهان و اخبار قلمرو</b><span>کل قاره را ببین و هم‌پای پیشروی حماسه خبرها را بخوان، از ستارهٔ فروافتاده تا آنچه زیر بلک‌اسپایر می‌جنبد.</span>",
+  feat2: "<b>کلن‌ها، دوستان و گفت‌وگوی صوتی</b><span>گروه تشکیل بده، دعوت بفرست و بی‌آنکه از لانچر بیرون بروی با کلنت حرف بزن.</span>",
+  feat3: "<b>ماموریت‌ها، یادگارها و بازار</b><span>ماموریت‌های داستانی و روزانه را دنبال کن، با ورود پیاپی یادگارهای نخست‌زادگان را بگیر و به بازار کینگزریچ سر بزن.</span>",
+  feat4: "<b>فارسی و انگلیسی</b><span>لانچر را به فارسی یا انگلیسی، با چیدمان کامل راست‌به‌چپ و در حالت روشن یا تیره به کار ببر.</span>",
+  dlEyebrow: "دانلود",
+  dlTitle: "لانچر را دریافت کن",
+  joinEyebrow: "به ما بپیوند",
+  joinTitle: "دوستانت همین حالا در حال کاوش‌اند",
+  step1: "<b>لانچر را دریافت کن</b><span>لانچر الدرمیر را <a href=\"#download\">دانلود</a> و روی رایانه‌ات نصب کن.</span>",
+  step2: "<b>نمایه‌ات را بساز</b><span>با ایمیلت وارد شو یا ثبت‌نام کن تا نمایهٔ بازیکن الدرمیر متصل شود.</span>",
+  step3: "<b>راهت را برگزین</b><span>جنگجوی سیلور‌وود یا جادوگر فراست‌پیک شو، قلمرویی برگزین و «بازی» را بزن.</span>",
+  joinMeta: "ماینکرفت نسخهٔ جاوا ۱.۲۱.۱ · ۸ گیگابایت حافظه پیشنهاد می‌شود",
+  footBrand: "الدرمیر · sopelcraft.gg · <a href=\"wiki.html\">ویکی</a>",
+  footLegal: "این محصول رسمی ماینکرفت نیست و مورد تأیید Mojang یا Microsoft نیست و با آن‌ها ارتباطی ندارد."
+};
+
+/* Strings the script builds, in both languages. */
+var MSG = {
+  en: { langBtn: "فارسی", langLabel: "تغییر زبان به فارسی", dlFor: "Download for {os}", dlAll: "Download the launcher", download: "Download", yours: "Your system",
+    lede: "The Eldermere launcher runs on Windows, macOS and Linux. We picked the build for your computer; the others are here too.",
+    ledeMobile: "The launcher runs on desktop computers. Open this page on Windows, macOS or Linux, or pick a build below.",
+    windows: "Windows", mac: "macOS", linux: "Linux",
+    winNote: "Windows 10 or 11, 64-bit", macNote: "Apple Silicon (M1 or later)", linuxNote: "64-bit x86, glibc",
+    mb: "{n} MB",
+    hint: { windows: "If SmartScreen warns you, choose <b>More info</b> and then <b>Run anyway</b>.",
+      mac: "After downloading, open Terminal in the download folder and run <code>chmod +x {file}</code> and <code>xattr -d com.apple.quarantine {file}</code> once.",
+      linux: "After downloading, make it executable with <code>chmod +x {file}</code>, then run it." },
+    none: "No builds are available yet. Check back soon." },
+  fa: { langBtn: "English", langLabel: "Switch to English", dlFor: "دانلود برای {os}", dlAll: "دانلود لانچر", download: "دانلود", yours: "سیستم شما",
+    lede: "لانچر الدرمیر روی ویندوز، مک و لینوکس اجرا می‌شود. نسخهٔ مناسب رایانه‌ات را برایت برگزیده‌ایم و نسخه‌های دیگر هم همین‌جاست.",
+    ledeMobile: "لانچر روی رایانه‌های رومیزی اجرا می‌شود. این صفحه را روی ویندوز، مک یا لینوکس باز کن یا یکی از نسخه‌های زیر را برگزین.",
+    windows: "ویندوز", mac: "مک", linux: "لینوکس",
+    winNote: "ویندوز ۱۰ یا ۱۱، ۶۴ بیتی", macNote: "اپل سیلیکون (M1 یا جدیدتر)", linuxNote: "x86 ۶۴ بیتی، glibc",
+    mb: "{n} مگابایت",
+    hint: { windows: "اگر SmartScreen هشدار داد، <b>More info</b> و سپس <b>Run anyway</b> را بزن.",
+      mac: "پس از دانلود، ترمینال را در پوشهٔ دانلود باز کن و یک بار <code>chmod +x {file}</code> و <code>xattr -d com.apple.quarantine {file}</code> را اجرا کن.",
+      linux: "پس از دانلود، با <code>chmod +x {file}</code> آن را اجراپذیر کن و سپس اجرایش کن." },
+    none: "هنوز نسخه‌ای منتشر نشده است. به‌زودی سر بزن." }
+};
+
+var lang = "fa";
+try { lang = localStorage.getItem("eldermere-lang") === "en" ? "en" : "fa"; } catch (e) {}
+var EN = {};
+var i18nEls = document.querySelectorAll("[data-i18n]"), ariaEls = document.querySelectorAll("[data-i18n-aria-label]");
+i18nEls.forEach(function (el) { EN[el.dataset.i18n] = el.innerHTML; });
+ariaEls.forEach(function (el) { EN[el.dataset.i18nAriaLabel] = el.getAttribute("aria-label"); });
+EN.title = document.title;
+EN.copied = "Copied";
+function t(key) { return lang === "fa" && FA[key] != null ? FA[key] : EN[key]; }
+function m(key) { return MSG[lang][key]; }
+function fill(s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
+
+/* Platform from the browser. iPadOS reports itself as a Mac, so touch screens count as mobile. */
+function detectOS() {
+  var ua = navigator.userAgent || "", p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+  if (/android|iphone|ipad|ipod/i.test(ua) || (/mac/i.test(p) && navigator.maxTouchPoints > 1)) return "mobile";
+  if (/mac/i.test(p) || /mac os x/i.test(ua)) return "mac";
+  if (/win/i.test(p) || /windows/i.test(ua)) return "windows";
+  if (/linux|x11|cros/i.test(p + " " + ua)) return "linux";
+  return "";
+}
+var OS = detectOS();
+var ICON_DL = '<svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M7 1h2v8h2v-2h2v2h-1v1h-1v1h-1v1H8v-1H7v-1H6V9H5V7h2v2zM2 13h12v2H2z"/></svg>';
+function href(r) { return DOWNLOAD_BASE + encodeURIComponent(r.file); }
+function size(n) { var mb = Math.round(n / 104857.6) / 10; return fill(m("mb"), { n: mb.toLocaleString(lang === "fa" ? "fa-IR" : "en-US") }); }
+
+function renderDownloads() {
+  var order = ["windows", "mac", "linux"], mine = null;
+  var list = order.map(function (os) { return RELEASES.filter(function (r) { return r.os === os; })[0]; }).filter(Boolean);
+  list.forEach(function (r) { if (r.os === OS) mine = r; });
+  var hero = document.getElementById("dl-hero");
+  if (mine) { hero.href = href(mine); hero.setAttribute("download", mine.file); hero.innerHTML = ICON_DL + fill(m("dlFor"), { os: m(mine.os) }); }
+  else { hero.href = "#download"; hero.removeAttribute("download"); hero.innerHTML = ICON_DL + m("dlAll"); }
+  document.getElementById("dl-lede").textContent = OS === "mobile" ? m("ledeMobile") : m("lede");
+  var notes = { windows: "winNote", mac: "macNote", linux: "linuxNote" };
+  document.getElementById("dl-grid").innerHTML = list.length ? list.map(function (r) {
+    return '<li class="dl-card' + (r === mine ? " mine" : "") + '"><p class="tag">' + (r === mine ? m("yours") : "") + "</p><h3>" + m(r.os) + '</h3><p class="note">' + m(notes[r.os]) + " · " + size(r.size) +
+      '</p><a class="btn-dl" href="' + href(r) + '" download="' + r.file + '">' + ICON_DL + m("download") + "</a></li>";
+  }).join("") : '<li class="note">' + m("none") + "</li>";
+  document.getElementById("dl-hint").innerHTML = mine ? fill(m("hint")[mine.os], { file: mine.file }) : "";
+}
+
+function applyLang() {
+  var root = document.documentElement;
+  root.lang = lang; root.dir = lang === "fa" ? "rtl" : "ltr";
+  i18nEls.forEach(function (el) { el.innerHTML = t(el.dataset.i18n); });
+  ariaEls.forEach(function (el) { el.setAttribute("aria-label", t(el.dataset.i18nAriaLabel)); });
+  document.title = t("title");
+  var btn = document.getElementById("lang-btn");
+  btn.textContent = m("langBtn"); btn.setAttribute("aria-label", m("langLabel")); btn.lang = lang === "fa" ? "en" : "fa";
+  renderDownloads();
+}
+document.getElementById("lang-btn").addEventListener("click", function () {
+  lang = lang === "fa" ? "en" : "fa";
+  try { localStorage.setItem("eldermere-lang", lang); } catch (e) {}
+  applyLang();
+});
+applyLang();
+
 document.querySelectorAll(".ip button").forEach(function (btn) {
   btn.addEventListener("click", function () {
     var code = document.getElementById(btn.dataset.target);
-    var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1600); };
+    var done = function () { btn.textContent = t("copied"); setTimeout(function () { btn.textContent = t("copy"); }, 1600); };
     var select = function () { var r = document.createRange(); r.selectNodeContents(code); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
     try {
       navigator.clipboard.writeText(code.textContent).then(done, select);

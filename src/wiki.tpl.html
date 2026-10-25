@@ -1,8 +1,9 @@
+<meta charset="utf-8">
 <title>Eldermere Wiki</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Alegreya:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&family=Vazirmatn:wght@400;600;700&display=swap">
 <style>
 /* Layout: an encyclopedia of the seals. Sticky top bar with search, category sidebar, article column with a right-hand infobox. Dark-first like the launcher, with a light variant from its Eldermere Light theme. */
 :root {
@@ -24,6 +25,7 @@
   --f-pixel: "Pixelify Sans", "Courier New", monospace;
   --f-serif: "Alegreya", Georgia, "Times New Roman", serif;
   --f-sans: "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+  --f-fa: "Vazirmatn", Tahoma, sans-serif;
   --map: url("{{BG}}");
 }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
@@ -161,20 +163,54 @@ p { margin: 0; }
   .hello .count { text-align: left; }
   .pin { font-size: 0; gap: 0; }
 }
+
+/* Language switch */
+.lang-btn { flex: none; font: 600 .85rem/1 var(--f-fa); background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 9px 12px; cursor: pointer; }
+.lang-btn:hover { border-color: var(--heart); color: var(--heart); }
+:root[lang="fa"] .lang-btn { font-family: var(--f-sans); }
+
+/* Persian: Vazirmatn everywhere (Pixelify and Alegreya have no Arabic script), no tracking or caps since they break joined letters. */
+:root[lang="fa"] { --f-pixel: var(--f-fa); --f-serif: var(--f-fa); --f-sans: var(--f-fa); }
+:root[lang="fa"] .lang-btn { --f-sans: "Alegreya Sans", system-ui, sans-serif; }
+:root[lang="fa"] *, :root[lang="fa"] *::before, :root[lang="fa"] *::after { letter-spacing: 0 !important; text-transform: none !important; }
+:root[lang="fa"] .body, :root[lang="fa"] .panel .pbody, :root[lang="fa"] .hello p { line-height: 1.95; font-size: 1.05rem; }
+:root[lang="fa"] .quote, :root[lang="fa"] .subtitle, :root[lang="fa"] .ib-sub, :root[lang="fa"] .saga-text p.beat, :root[lang="fa"] .saga-text .said { font-style: normal; }
+:root[lang="fa"] ol { list-style-type: persian; }
+:root[lang="fa"] .formula { font-family: var(--f-fa); }
+:root[lang="fa"] .brand b { font-family: "Pixelify Sans", monospace; letter-spacing: .06em !important; }
+
+/* Right-to-left: mirror the physical-side rules above. */
+[dir="rtl"] .search { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .side a { border-left: 0; border-right: 2px solid transparent; }
+[dir="rtl"] .side a[aria-current="page"] { border-right-color: var(--heart); }
+[dir="rtl"] .body ul, [dir="rtl"] .body ol, [dir="rtl"] .toc ol, [dir="rtl"] .dyk { padding-left: 0; padding-right: 1.3em; }
+[dir="rtl"] .toc { padding: 12px 14px 12px 18px; }
+[dir="rtl"] .quote, [dir="rtl"] .saga-text .said { border-left: 0; border-right: 3px solid var(--q, var(--heart)); padding: 2px 18px 2px 0; }
+[dir="rtl"] .saga-text .said { border-right-color: var(--ember); }
+[dir="rtl"] .note { border-left: 1px solid var(--line); border-right: 3px solid var(--ember); }
+[dir="rtl"] .cite { margin-left: 0; margin-right: 1px; }
+[dir="rtl"] .infobox { float: left; margin: 0 28px 18px 0; }
+[dir="rtl"] .body th, [dir="rtl"] .body td { text-align: right; }
+[dir="rtl"] .hello .count { text-align: left; }
+[dir="rtl"] .pin { flex-direction: row-reverse; }
+[dir="rtl"] .pin.l { flex-direction: row; }
+@media (max-width: 1000px) { [dir="rtl"] .infobox { float: none; margin: 0 0 22px; } }
+@media (max-width: 520px) { [dir="rtl"] .hello .count { text-align: right; } }
 </style>
 
 <header class="top">
   <div class="top-in">
-    <a class="brand" href="#main" aria-label="Eldermere Wiki, main page">
+    <a class="brand" href="#main" aria-label="Eldermere Wiki, main page" id="brand">
       <svg class="seal" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="20" cy="20" r="14.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="1.2 2.6"/><path d="M20 8.5 31.5 20 20 31.5 8.5 20Z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="20" cy="20" r="3.4" fill="currentColor"/></svg>
-      <div><b>ELDERMERE</b><br><span>Wiki</span></div>
+      <div><b>ELDERMERE</b><br><span id="brand-sub">Wiki</span></div>
     </a>
     <div class="search">
-      <label for="q" hidden>Search the wiki</label>
+      <label for="q" hidden id="q-label">Search the wiki</label>
       <input id="q" type="search" placeholder="Search Vaelthar, Kingsreach, the Seals…" autocomplete="off">
       <ul class="results" id="results" hidden></ul>
     </div>
     <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="side">Menu</button>
+    <button class="lang-btn" id="lang-btn" type="button"></button>
   </div>
 </header>
 
@@ -185,7 +221,11 @@ p { margin: 0; }
 
 <script>
 var SITE = "{{SITE}}";
-var SAGA = {{SAGA_JSON}};
+var SAGA_ALL = {{SAGA_JSON}};
+{{WIKI_FA}}
+var lang = "fa";
+try { lang = localStorage.getItem("eldermere-lang") === "en" ? "en" : "fa"; } catch (e) {}
+var SAGA = SAGA_ALL[lang];
 var CATS = [
   { key: "History", color: "var(--heart)" },
   { key: "Characters", color: "var(--ember)" },
@@ -509,10 +549,70 @@ var DYK = [
 
 var PINS = [["kingsreach", .47, .44], ["silverwood", .27, .3], ["ravenford", .31, .36, 1], ["frostpeak", .56, .11], ["wintermere", .5, .2, 1], ["blackspire", .75, .26], ["ashen-wastes", .63, .36, 1], ["crimson-expanse", .74, .48], ["emberlands", .3, .68], ["southern-isles", .6, .8]];
 
+/* ---------- language ---------- */
+var UI = {
+  en: { navigate: "Navigate", mainPage: "Main page", timeline: "Timeline", readSaga: "Read the saga", play: "Play on sopelcraft.gg ↗",
+    contents: "Contents", quotes: "Quotes", seeAlso: "See also", category: "Category", source: "Source", gameplaySrc: "Eldermere gameplay design", firstSaga: "The First Saga",
+    wiki: "Wiki", wikiTitle: "Eldermere Wiki", brandLabel: "Eldermere Wiki, main page", searchLabel: "Search the wiki", searchPh: "Search Vaelthar, Kingsreach, the Seals…", menu: "Menu",
+    noMatch: "No articles match “{q}”", noMatchHint: "Try a place, a person or a faction", onMap: "{t} on the map of Eldermere", q: ["“", "”"],
+    langBtn: "فارسی", langLabel: "تغییر زبان به فارسی",
+    textIntro: 'The complete text of the First Saga, from the Firstborn to the last whisper beneath Blackspire. Chapter markers like <a class="cite" href="#text-3">[III]</a> across the wiki link here.',
+    timelineIntro: "Events of Eldermere in order, from the age of the Firstborn to the end of the First Saga.",
+    welcome: "Welcome to the Eldermere Wiki",
+    intro: 'The encyclopedia of Eldermere, the world of the <a href="{site}">sopelcraft.gg</a> Minecraft server. Read about the Firstborn, the Seals and the return of the First Darkness, and learn how regions, PvP, claims and outposts work.',
+    articles: "articles",
+    spoil: 'This wiki covers the whole First Saga, including how it ends. Start with <a href="#saga">The Age of the Falling Star</a> or <a href="#saga-text">read the saga</a> from the beginning.',
+    mapTitle: "Map of Eldermere", mapAria: "Map of Eldermere with links to places",
+    mapCap: 'Select a place on the map to open its article. Eight places from the saga are marked, from the capital at <a href="#kingsreach">Kingsreach</a> to the ruins of <a href="#blackspire">Blackspire</a>.',
+    featured: "Featured article", readMore: "Read more →", dyk: "Did you know…", fromSaga: "From the saga",
+    sagaBlurb: "Two heroes meet for the first time beneath [[kingsreach]], and learn that the ancient enemy was never destroyed, only imprisoned. The seals cannot simply be repaired. Someone must enter the prison and face [[vaelthar]] directly.",
+    sagaQuote: ["Darius is breaking the seals in Silverwood. Seraphine is breaking the seals beneath Frostpeak.", "The First Saga, Chapter VI"], readCh6: "Read chapter VI →",
+    cats: {} },
+  fa: { navigate: "پیمایش", mainPage: "صفحهٔ اصلی", timeline: "گاه‌شمار", readSaga: "خواندن حماسه", play: "بازی در sopelcraft.gg ↗",
+    contents: "فهرست", quotes: "گفتاوردها", seeAlso: "همچنین ببینید", category: "رده", source: "منبع", gameplaySrc: "طراحی گیم‌پلی الدرمیر", firstSaga: "حماسهٔ یکم",
+    wiki: "ویکی", wikiTitle: "ویکی الدرمیر", brandLabel: "ویکی الدرمیر، صفحهٔ اصلی", searchLabel: "جست‌وجو در ویکی", searchPh: "جست‌وجوی ویلتار، کینگزریچ، مُهرها…", menu: "منو",
+    noMatch: "هیچ مقاله‌ای با «{q}» پیدا نشد", noMatchHint: "نام یک مکان، شخص یا گروه را امتحان کنید", onMap: "{t} روی نقشهٔ الدرمیر", q: ["«", "»"],
+    langBtn: "English", langLabel: "Switch to English",
+    textIntro: 'متن کامل حماسهٔ یکم، از نخست‌زادگان تا آخرین نجوا زیر بلک‌اسپایر. نشانه‌های فصل مانند <a class="cite" href="#text-3">[۳]</a> در سراسر ویکی به اینجا پیوند دارند.',
+    timelineIntro: "رویدادهای الدرمیر به ترتیب، از عصر نخست‌زادگان تا پایان حماسهٔ یکم.",
+    welcome: "به ویکی الدرمیر خوش آمدید",
+    intro: 'دانشنامهٔ الدرمیر، جهان سرور ماینکرفت <a href="{site}">sopelcraft.gg</a>. دربارهٔ نخست‌زادگان، مُهرها و بازگشت نخستین تاریکی بخوانید و ببینید سرزمین‌ها، نبرد بازیکنان، زمین‌های تصرفی و پایگاه‌ها چگونه کار می‌کنند.',
+    articles: "مقاله",
+    spoil: 'این ویکی سراسر حماسهٔ یکم، از جمله پایانش را بازگو می‌کند. با <a href="#saga">عصر ستارهٔ فروافتاده</a> آغاز کنید یا <a href="#saga-text">حماسه را</a> از ابتدا بخوانید.',
+    mapTitle: "نقشهٔ الدرمیر", mapAria: "نقشهٔ الدرمیر با پیوند به مکان‌ها",
+    mapCap: 'برای باز کردن مقالهٔ هر مکان، آن را روی نقشه برگزینید. مکان‌های حماسه، از پایتخت در <a href="#kingsreach">کینگزریچ</a> تا ویرانه‌های <a href="#blackspire">بلک‌اسپایر</a>، روی نقشه نشان داده شده‌اند.',
+    featured: "مقالهٔ برگزیده", readMore: "بیشتر بخوانید ←", dyk: "آیا می‌دانستید…", fromSaga: "از حماسه",
+    sagaBlurb: "دو قهرمان نخستین بار زیر [[kingsreach]] به هم می‌رسند و درمی‌یابند که دشمن باستانی هرگز نابود نشده بود، تنها به بند کشیده شده بود. مُهرها را نمی‌توان به‌سادگی ترمیم کرد. کسی باید به زندان پا بگذارد و رودررو با [[vaelthar]] روبه‌رو شود.",
+    sagaQuote: ["داریوس مُهرهای سیلور‌وود را می‌شکند. سرافین مُهرهای زیر فراست‌پیک را می‌شکند.", "حماسهٔ یکم، فصل ششم"], readCh6: "خواندن فصل ششم ←",
+    cats: { History: "تاریخ", Characters: "شخصیت‌ها", Factions: "گروه‌ها", Places: "مکان‌ها", Artifacts: "اشیای کهن", Gameplay: "گیم‌پلی" } }
+};
+var ROMAN_ALL = { en: ["Prologue", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "Epilogue"],
+  fa: ["پیش‌درآمد", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", "۱۰", "۱۱", "۱۲", "۱۳", "پایان‌سخن"] };
+function U(k) { return UI[lang][k]; }
+function catName(k) { return UI[lang].cats[k] || k; }
+
+/* A holds the articles in the current language. Each section keeps its English heading as a third item so anchors don't change with language. */
+var A_EN = A, TL = TIMELINE, DYKL = DYK, ROMAN = ROMAN_ALL.en;
+function localize() {
+  SAGA = SAGA_ALL[lang]; ROMAN = ROMAN_ALL[lang]; A = {};
+  var fa = lang === "fa" ? FA : { articles: {} };
+  Object.keys(A_EN).forEach(function (id) {
+    var en = A_EN[id], f = fa.articles[id] || {}, a = Object.assign({}, en);
+    ["title", "sub", "lead", "quotes"].forEach(function (k) { if (f[k]) a[k] = f[k]; });
+    if (en.sections) a.sections = en.sections.map(function (s, i) { var x = (f.sections || [])[i] || s; return [x[0], x[1], s[0]]; });
+    if (en.box) {
+      var fb = f.box || {};
+      a.box = Object.assign({}, en.box, { cap: fb.cap || en.box.cap, rows: en.box.rows.map(function (row, i) { var x = (fb.rows || [])[i]; return x ? [row[0] === "@" ? "@" : x[0], x[1]] : row; }) });
+    }
+    A[id] = a;
+  });
+  TL = TIMELINE.map(function (t, i) { var x = lang === "fa" && FA.timeline[i]; return x ? [x[0], x[1], t[2]] : t; });
+  DYKL = DYK.map(function (d, i) { return (lang === "fa" && FA.dyk[i]) || d; });
+}
+
 /* ---------- rendering ---------- */
 var page = document.getElementById("page"), side = document.getElementById("side");
 var ORDER = ["saga", "saga-text", "timeline", "war-of-the-firstborn", "final-war", "vaelthar", "darius", "seraphine", "warrior", "mage", "firstborn", "iron-wolves", "veiled-circle", "vaelthar-order", "warriors", "mages", "kingsreach", "silverwood", "ravenford", "frostpeak", "wintermere", "blackspire", "ashen-wastes", "crimson-expanse", "emberlands", "southern-isles", "heart", "falling-star", "seals", "black-fragment", "regions-safety", "newcomer-protection", "death-penalty", "land-claims", "outposts", "story-progress"];
-var ROMAN = ["Prologue", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "Epilogue"];
 
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 function md(s) {
@@ -529,9 +629,9 @@ function catColor(cat) { for (var i = 0; i < CATS.length; i++) if (CATS[i].key =
 
 function renderSide(current) {
   function li(id, label) { return '<li><a href="#' + id + '"' + (current === id ? ' aria-current="page"' : "") + ">" + label + "</a></li>"; }
-  var h = "<div><h4>Navigate</h4><ul>" + li("main", "Main page") + li("timeline", "Timeline") + li("saga-text", "Read the saga") + '<li><a class="out" href="' + SITE + '" target="_blank" rel="noopener">Play on sopelcraft.gg ↗</a></li></ul></div>';
+  var h = "<div><h4>" + U("navigate") + "</h4><ul>" + li("main", U("mainPage")) + li("timeline", U("timeline")) + li("saga-text", U("readSaga")) + '<li><a class="out" href="' + SITE + '">' + U("play") + "</a></li></ul></div>";
   CATS.forEach(function (c) {
-    h += "<div><h4>" + c.key + "</h4><ul>";
+    h += "<div><h4>" + catName(c.key) + "</h4><ul>";
     ORDER.forEach(function (id) { var a = A[id]; if (a.cat === c.key && !a.special) h += li(id, esc(a.title)); });
     h += "</ul></div>";
   });
@@ -541,7 +641,7 @@ function renderSide(current) {
 function infobox(a) {
   var b = a.box, c = b.c || catColor(a.cat);
   var h = '<aside class="infobox" style="--c:' + c + '"><div class="ib-title">' + esc(a.title) + "</div>" + (a.sub ? '<div class="ib-sub">' + esc(a.sub) + "</div>" : "");
-  if (b.crop) h += '<div class="ib-img ib-crop" style="--x:' + a.x + ";--y:" + a.y + '" role="img" aria-label="' + esc(a.title) + ' on the map of Eldermere"></div>';
+  if (b.crop) h += '<div class="ib-img ib-crop" style="--x:' + a.x + ";--y:" + a.y + '" role="img" aria-label="' + esc(U("onMap").replace("{t}", a.title)) + '"></div>';
   else h += '<div class="ib-img ib-emblem">' + SEAL.replace("%", esc(b.emblem || a.title[0])) + "</div>";
   if (b.cap) h += '<div class="ib-cap">' + esc(b.cap) + "</div>";
   h += "<dl>";
@@ -549,51 +649,51 @@ function infobox(a) {
   return h + "</dl></aside>";
 }
 
-function quoteBlock(q, c) { return '<blockquote class="quote" style="--q:' + c + '">“' + esc(q[0]) + "”<cite>" + esc(q[1]) + "</cite></blockquote>"; }
+function quoteBlock(q, c) { return '<blockquote class="quote" style="--q:' + c + '">' + U("q")[0] + esc(q[0]) + U("q")[1] + "<cite>" + esc(q[1]) + "</cite></blockquote>"; }
 function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-"); }
 
 function renderArticle(a) {
   var c = catColor(a.cat);
-  var h = '<p class="crumbs">' + esc(a.cat) + "</p><h1>" + esc(a.title) + "</h1>" + (a.sub ? '<p class="subtitle">' + esc(a.sub) + "</p>" : "");
+  var h = '<p class="crumbs">' + esc(catName(a.cat)) + "</p><h1>" + esc(a.title) + "</h1>" + (a.sub ? '<p class="subtitle">' + esc(a.sub) + "</p>" : "");
   h += '<div class="body' + (a.special === "text" ? " saga-text" : "") + '">';
   if (a.special === "text") {
-    h += '<p>The complete text of the First Saga, from the Firstborn to the last whisper beneath Blackspire. Chapter markers like <a class="cite" href="#text-3">[III]</a> across the wiki link here.</p>';
-    h += '<div class="toc"><strong>Contents</strong><ol>' + SAGA.map(function (s, i) { return '<li><a href="#text-' + i + '">' + esc(s.num + ": " + s.label) + "</a></li>"; }).join("") + "</ol></div>";
+    h += "<p>" + U("textIntro") + "</p>";
+    h += '<div class="toc"><strong>' + U("contents") + '</strong><ol>' + SAGA.map(function (s, i) { return '<li><a href="#text-' + i + '">' + esc(s.num + ": " + s.label) + "</a></li>"; }).join("") + "</ol></div>";
     SAGA.forEach(function (s, i) { h += '<h2 id="text-' + i + '">' + esc(s.num) + ": " + esc(s.label) + "</h2>" + s.html; });
   } else if (a.special === "timeline") {
-    h += "<p>Events of Eldermere in order, from the age of the Firstborn to the end of the First Saga.</p><ol>";
-    TIMELINE.forEach(function (t) { h += "<li><b>" + esc(t[0]) + ".</b> " + md(t[1]) + md("{{ch:" + t[2] + "}}") + "</li>"; });
+    h += "<p>" + U("timelineIntro") + "</p><ol>";
+    TL.forEach(function (t) { h += "<li><b>" + esc(t[0]) + ".</b> " + md(t[1]) + md("{{ch:" + t[2] + "}}") + "</li>"; });
     h += "</ol>";
   } else {
     if (a.box) h += infobox(a);
     h += "<p>" + md(a.lead) + "</p>";
-    if (a.sections.length > 1) h += '<div class="toc"><strong>Contents</strong><ol>' + a.sections.map(function (s) { return '<li><a href="#' + a.id + "~" + slug(s[0]) + '">' + esc(s[0]) + "</a></li>"; }).join("") + (a.quotes ? '<li><a href="#' + a.id + '~quotes">Quotes</a></li>' : "") + "</ol></div>";
+    if (a.sections.length > 1) h += '<div class="toc"><strong>' + U("contents") + '</strong><ol>' + a.sections.map(function (s) { return '<li><a href="#' + a.id + "~" + slug(s[2] || s[0]) + '">' + esc(s[0]) + "</a></li>"; }).join("") + (a.quotes ? '<li><a href="#' + a.id + '~quotes">' + U("quotes") + "</a></li>" : "") + "</ol></div>";
     a.sections.forEach(function (s) {
-      h += '<h2 id="sec-' + slug(s[0]) + '">' + esc(s[0]) + "</h2>";
+      h += '<h2 id="sec-' + slug(s[2] || s[0]) + '">' + esc(s[0]) + "</h2>";
       if (s[1] === "@chapters") h += "<ol>" + SAGA.map(function (x, i) { return '<li><a href="#text-' + i + '">' + esc(x.num + ": " + x.label) + "</a></li>"; }).join("") + "</ol>";
       else h += md(s[1]);
     });
-    if (a.quotes) { h += '<h2 id="sec-quotes">Quotes</h2>'; a.quotes.forEach(function (q) { h += quoteBlock(q, c); }); }
+    if (a.quotes) { h += '<h2 id="sec-quotes">' + U("quotes") + "</h2>"; a.quotes.forEach(function (q) { h += quoteBlock(q, c); }); }
     var seen = {}, related = ((a.lead + JSON.stringify(a.sections) + JSON.stringify(a.box || {})).match(/\[\[([a-z0-9-]+)/g) || [])
       .map(function (r) { return r.slice(2); }).filter(function (id) { if (seen[id] || id === a.id || !A[id]) return false; seen[id] = 1; return true; });
-    if (related.length) h += '<h2 id="sec-see-also">See also</h2><ul>' + related.slice(0, 8).map(function (id) { return '<li><a href="#' + id + '">' + esc(A[id].title) + '</a> <span style="color:var(--muted)">· ' + esc(A[id].cat) + "</span></li>"; }).join("") + "</ul>";
+    if (related.length) h += '<h2 id="sec-see-also">' + U("seeAlso") + "</h2><ul>" + related.slice(0, 8).map(function (id) { return '<li><a href="#' + id + '">' + esc(A[id].title) + '</a> <span style="color:var(--muted)">· ' + esc(catName(A[id].cat)) + "</span></li>"; }).join("") + "</ul>";
   }
   h += "</div>";
-  h += '<div class="cats"><span>Category: <a href="#main">' + esc(a.cat) + '</a></span><span>Source: ' + (a.cat === "Gameplay" ? "Eldermere gameplay design" : '<a href="#saga-text">The First Saga</a>') + '</span></div>';
+  h += '<div class="cats"><span>' + U("category") + ': <a href="#main">' + esc(catName(a.cat)) + "</a></span><span>" + U("source") + ": " + (a.cat === "Gameplay" ? U("gameplaySrc") : '<a href="#saga-text">' + U("firstSaga") + "</a>") + "</span></div>";
   return h;
 }
 
 function renderMain() {
   var n = Object.keys(A).length;
-  var h = '<section class="hello"><div><h1>Welcome to the Eldermere Wiki</h1><p>The encyclopedia of Eldermere, the world of the <a href="' + SITE + '" target="_blank" rel="noopener">sopelcraft.gg</a> Minecraft server. Read about the Firstborn, the Seals and the return of the First Darkness, and learn how regions, PvP, claims and outposts work.</p></div><div class="count"><b>' + n + "</b>articles</div></section>";
-  h += '<p class="note spoil">This wiki covers the whole First Saga, including how it ends. Start with <a href="#saga">The Age of the Falling Star</a> or <a href="#saga-text">read the saga</a> from the beginning.</p>';
-  h += '<div class="mp-grid"><div class="panel"><h2>Map of Eldermere</h2><div class="mapbox" role="img" aria-label="Map of Eldermere with links to places">';
-  PINS.forEach(function (p) { h += '<a class="pin' + (p[3] ? " l" : "") + '" style="left:' + p[1] * 100 + "%;top:" + p[2] * 100 + '%" href="#' + p[0] + '" title="' + esc(A[p[0]].title) + '">' + esc(A[p[0]].title.replace("The ", "").replace(" Mountains", "").replace(" Forest", "")) + "</a>"; });
-  h += '</div><p class="map-cap">Select a place on the map to open its article. Eight places from the saga are marked, from the capital at <a href="#kingsreach">Kingsreach</a> to the ruins of <a href="#blackspire">Blackspire</a>.</p></div><div class="panel"><h2>Featured article</h2><div class="pbody"><h3><a href="#vaelthar">Vaelthar</a></h3><p>' + md(A.vaelthar.lead) + "</p>" + quoteBlock(A.vaelthar.quotes[0], "var(--ember)") + '<p><a href="#vaelthar">Read more →</a></p></div></div></div>';
-  h += '<div class="mp-grid" style="margin-top:18px"><div class="panel"><h2>Did you know…</h2><div class="pbody"><ul class="dyk">' + DYK.map(function (d) { return "<li>" + md(d) + "</li>"; }).join("") + '</ul></div></div><div class="panel"><h2>From the saga</h2><div class="pbody"><p class="kicker">Chapter VI · The Truth of Kingsreach</p><p>' + md("Two heroes meet for the first time beneath [[kingsreach]], and learn that the ancient enemy was never destroyed, only imprisoned. The seals cannot simply be repaired. Someone must enter the prison and face [[vaelthar]] directly.") + '</p>' + quoteBlock(["Darius is breaking the seals in Silverwood. Seraphine is breaking the seals beneath Frostpeak.", "The First Saga, Chapter VI"], "var(--heart)") + '<p><a href="#text-6">Read chapter VI →</a></p></div></div></div>';
+  var h = '<section class="hello"><div><h1>' + U("welcome") + "</h1><p>" + U("intro").replace("{site}", SITE) + '</p></div><div class="count"><b>' + n.toLocaleString(lang === "fa" ? "fa-IR" : "en-US") + "</b>" + U("articles") + "</div></section>";
+  h += '<p class="note spoil">' + U("spoil") + "</p>";
+  h += '<div class="mp-grid"><div class="panel"><h2>' + U("mapTitle") + '</h2><div class="mapbox" role="img" aria-label="' + U("mapAria") + '">';
+  PINS.forEach(function (p) { h += '<a class="pin' + (p[3] ? " l" : "") + '" style="left:' + p[1] * 100 + "%;top:" + p[2] * 100 + '%" href="#' + p[0] + '" title="' + esc(A[p[0]].title) + '">' + esc(A[p[0]].title.replace(/^The | Mountains$| Forest$|^کوهستان |^جنگل /g, "")) + "</a>"; });
+  h += '</div><p class="map-cap">' + U("mapCap") + '</p></div><div class="panel"><h2>' + U("featured") + '</h2><div class="pbody"><h3><a href="#vaelthar">' + esc(A.vaelthar.title) + "</a></h3><p>" + md(A.vaelthar.lead) + "</p>" + quoteBlock(A.vaelthar.quotes[0], "var(--ember)") + '<p><a href="#vaelthar">' + U("readMore") + "</a></p></div></div></div>";
+  h += '<div class="mp-grid" style="margin-top:18px"><div class="panel"><h2>' + U("dyk") + '</h2><div class="pbody"><ul class="dyk">' + DYKL.map(function (d) { return "<li>" + md(d) + "</li>"; }).join("") + '</ul></div></div><div class="panel"><h2>' + U("fromSaga") + '</h2><div class="pbody"><p class="kicker">' + esc(SAGA[6].num + " · " + SAGA[6].label) + "</p><p>" + md(U("sagaBlurb")) + "</p>" + quoteBlock(U("sagaQuote"), "var(--heart)") + '<p><a href="#text-6">' + U("readCh6") + "</a></p></div></div></div>";
   h += '<div class="mp-cats">';
   CATS.forEach(function (c) {
-    h += '<div style="--c:' + c.color + '"><h3>' + c.key + "</h3>";
+    h += '<div style="--c:' + c.color + '"><h3>' + catName(c.key) + "</h3>";
     ORDER.forEach(function (id) { if (A[id].cat === c.key) h += '<a href="#' + id + '">' + esc(A[id].title) + "</a>"; });
     h += "</div>";
   });
@@ -608,7 +708,7 @@ function go(hash, push) {
   if (id !== "main" && !A[id]) id = "main";
   page.innerHTML = id === "main" ? renderMain() : renderArticle(A[id]);
   renderSide(id);
-  document.title = id === "main" ? "Eldermere Wiki" : A[id].title + " · Eldermere Wiki";
+  document.title = id === "main" ? U("wikiTitle") : A[id].title + " · " + U("wikiTitle");
   if (push) { try { history.pushState(null, "", "#" + raw); } catch (e) {} }
   var target = sec && document.getElementById(sec);
   if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
@@ -637,7 +737,7 @@ function search() {
   hits = ORDER.map(function (id) { var a = A[id], t = a.title.toLowerCase(); var score = t.indexOf(s) === 0 ? 3 : t.indexOf(s) >= 0 ? 2 : textOf(a).indexOf(s) >= 0 ? 1 : 0; return { id: id, score: score }; })
     .filter(function (h) { return h.score; }).sort(function (x, y) { return y.score - x.score; }).slice(0, 8);
   sel = 0;
-  results.innerHTML = hits.length ? hits.map(function (h, i) { return '<li><a href="#' + h.id + '"' + (i === 0 ? ' class="sel"' : "") + ">" + esc(A[h.id].title) + "<small>" + esc(A[h.id].cat) + (A[h.id].sub ? " · " + esc(A[h.id].sub) : "") + "</small></a></li>"; }).join("") : '<li><a href="#main">No articles match “' + esc(q.value) + '”<small>Try a place, a person or a faction</small></a></li>';
+  results.innerHTML = hits.length ? hits.map(function (h, i) { return '<li><a href="#' + h.id + '"' + (i === 0 ? ' class="sel"' : "") + ">" + esc(A[h.id].title) + "<small>" + esc(catName(A[h.id].cat)) + (A[h.id].sub ? " · " + esc(A[h.id].sub) : "") + "</small></a></li>"; }).join("") : '<li><a href="#main">' + esc(U("noMatch")).replace("{q}", esc(q.value)) + "<small>" + U("noMatchHint") + "</small></a></li>";
   results.hidden = false;
 }
 q.addEventListener("input", search);
@@ -649,5 +749,24 @@ q.addEventListener("keydown", function (e) {
 });
 document.addEventListener("click", function (e) { if (!e.target.closest(".search")) closeResults(); });
 
+function applyLang() {
+  var root = document.documentElement;
+  root.lang = lang; root.dir = lang === "fa" ? "rtl" : "ltr";
+  localize();
+  document.getElementById("brand").setAttribute("aria-label", U("brandLabel"));
+  document.getElementById("brand-sub").textContent = U("wiki");
+  document.getElementById("q-label").textContent = U("searchLabel");
+  q.placeholder = U("searchPh");
+  document.getElementById("menu-btn").textContent = U("menu");
+  var btn = document.getElementById("lang-btn");
+  btn.textContent = U("langBtn"); btn.setAttribute("aria-label", U("langLabel")); btn.lang = lang === "fa" ? "en" : "fa";
+}
+document.getElementById("lang-btn").addEventListener("click", function () {
+  lang = lang === "fa" ? "en" : "fa";
+  try { localStorage.setItem("eldermere-lang", lang); } catch (e) {}
+  applyLang(); closeResults(); q.value = "";
+  var y = window.scrollY; go(location.hash, false); window.scrollTo(0, y);
+});
+applyLang();
 go(location.hash, false);
 </script>
